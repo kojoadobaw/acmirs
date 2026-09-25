@@ -1,0 +1,48 @@
+.video-card iframe,
+.video-card video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  border: 0;
+  background: #082e27;
+}
+
+.video-external {
+  min-height: 240px;
+  display: grid;
+  place-content: center;
+  gap: .5rem;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, #123f35, #0a2923);
+  text-decoration: none;
+}
+
+.video-external span { color: #c98a51; font-size: 2rem; }
+.video-external small { color: rgba(255,255,255,.68); }
+.video-description { padding: 1rem 1.1rem; margin: 0; background: #fff; color: #52615d; font-size: .86rem; }
+.exp-name { color: inherit; text-decoration: none; }
+.exp-name:hover { color: #b8763a; }
+.insight-image { width: calc(100% + 3rem); max-width: none; height: 190px; object-fit: cover; margin: -1.5rem -1.5rem 1.25rem; }
+.public-message { margin: 1rem 0 2rem; padding: 1rem 1.2rem; border-left: 3px solid #b8763a; background: #fff; color: #143d34; }
+.public-message--error { border-color: #a84639; }
+.insights-empty { grid-column: 1 / -1; padding: 2rem; border: 1px solid rgba(20,61,52,.16); color: #52615d; background: rgba(255,255,255,.45); }
+
+.detail-page { background: #f5f1e8; color: #173b34; }
+.detail-header { background: #0c322b; padding: 1.1rem clamp(1.2rem, 4vw, 4rem); display: flex; justify-content: space-between; align-items: center; }
+.detail-header img { width: 180px; display: block; }
+.detail-header a { color: #f7f1e8; text-decoration: none; }
+.detail-main { min-height: 70vh; }
+.detail-hero { padding: clamp(5rem, 10vw, 9rem) 1.5rem 4rem; background: #103b32; color: #fff; }
+.detail-hero > div, .detail-content { width: min(820px, 100%); margin: auto; }
+.detail-kicker { text-transform: uppercase; letter-spacing: .16em; font-size: .75rem; color: #c9915a; font-weight: 700; }
+.detail-hero h1 { font-family: "Playfair Display", serif; font-size: clamp(2.6rem, 7vw, 5.2rem); line-height: .98; max-width: 900px; margin: 1rem 0; }
+.detail-meta { color: rgba(255,255,255,.7); }
+.detail-content { padding: 4rem 1.5rem 6rem; font-size: 1.08rem; line-height: 1.85; }
+.detail-content .lead { font-family: "Playfair Display", serif; font-size: 1.55rem; line-height: 1.45; color: #31564e; }
+.detail-content img { width: 100%; margin: 1rem 0 2rem; }
+.detail-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 1px; background: #d6cec0; margin: 0 0 2rem; }
+.detail-facts div { background: #fff; padding: 1.2rem; }
+.detail-facts dt { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: #8a7462; }
+.detail-facts dd { margin: .4rem 0 0; font-weight: 700; }
+.detail-footer { background: #0c322b; color: rgba(255,255,255,.72); padding: 2rem; text-align: center; }

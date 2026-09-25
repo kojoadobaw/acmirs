@@ -1,0 +1,44 @@
+/* ==========================================================================
+   Hero opening reveal — "A" geometry mask
+   Everything here is additive on top of the hero rules in site.css. At rest
+   (no JS, no GSAP, prefers-reduced-motion, narrow viewport, thrifty
+   connection) .hero-mask stays display:none and every .word/.word-wrap span
+   renders exactly like plain text — the hero looks and behaves exactly as it
+   did before this file existed. assets/js/hero-reveal.js is the only thing
+   that ever shows the mask or moves a word.
+   ========================================================================== */
+
+.hero-mask {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  margin: auto;
+  width: clamp(200px, 30vw, 440px);
+  aspect-ratio: 1 / 1;
+  height: clamp(200px, 30vw, 440px);
+  overflow: hidden;
+  clip-path: url(#aRevealMask);
+  -webkit-clip-path: url(#aRevealMask);
+  background: var(--forest-card);
+}
+
+.hero-mask video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Word-level split for the headline's staggered rise. Unstyled, these two
+   spans are inline-block wrappers around ordinary words — the line still
+   wraps normally at any viewport width, and with no transform applied the
+   text reads exactly as if it were unwrapped. */
+.word-wrap { display: inline-block; overflow: hidden; vertical-align: top; }
+.word { display: inline-block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-mask, .word, [data-hero-dossier], [data-hero-actions] { transition: none !important; }
+}

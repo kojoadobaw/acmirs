@@ -12,12 +12,15 @@ copied into this folder so the existing site does not need to be changed.
 
 ## Setup
 
-1. Copy `config/local.example.php` to `config/local.php` and enter the MySQL
-   connection details. Environment variables shown in `.env.example` may be
-   used instead.
+1. Copy `.env.example` to `.env` and enter the real MySQL connection details.
+   (`config/local.example.php` → `config/local.php` also works as an
+   alternative to `.env`.) There are no built-in defaults — the app fails to
+   start if the database configuration is incomplete.
 2. Ensure the database user can create the configured database, or create the
    database manually and grant the user access.
-3. Open `/ACMIRSPHP/install.php` in a browser and run the migration.
+3. Open `/ACMIRSPHP/install.php` in a browser to create the tables and the
+   default administrator account. No demo content is seeded; all content is
+   added through the admin panel.
 4. Sign in at `/ACMIRSPHP/admin/` with username `admin` and temporary password
    `admin`.
 5. The first sign-in forces the administrator to set a private password of at

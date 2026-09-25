@@ -36,73 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $message === '') {
             }
         }
 
-        $seed = require __DIR__ . '/database/seed.php';
         $pdo->beginTransaction();
 
         if ((int) $pdo->query('SELECT COUNT(*) FROM admins')->fetchColumn() === 0) {
             $statement = $pdo->prepare('INSERT INTO admins (username, password_hash, must_change_password) VALUES (?, ?, 1)');
             $statement->execute(['admin', password_hash('admin', PASSWORD_DEFAULT)]);
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM site_settings')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?)');
-            foreach ($seed['settings'] as $key => $value) {
-                $statement->execute([$key, $value]);
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM sectors')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO sectors (name, description, icon, sort_order) VALUES (?, ?, ?, ?)');
-            foreach ($seed['sectors'] as $index => $sector) {
-                $statement->execute([$sector[0], $sector[1], $sector[2], ($index + 1) * 10]);
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM services')->fetchColumn() === 0) {
-            $serviceStatement = $pdo->prepare('INSERT INTO services (slug, label, title, blurb, items_json, challenge, response, outcome, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            $sectorLookup = $pdo->query('SELECT name, id FROM sectors')->fetchAll(PDO::FETCH_KEY_PAIR);
-            $joinStatement = $pdo->prepare('INSERT IGNORE INTO service_sectors (service_id, sector_id) VALUES (?, ?)');
-            foreach ($seed['services'] as $index => $service) {
-                $serviceStatement->execute([$service[0], $service[1], $service[1], $service[2], json_encode($service[3], JSON_UNESCAPED_UNICODE), $service[4], $service[5], $service[6], ($index + 1) * 10]);
-                $serviceId = (int) $pdo->lastInsertId();
-                foreach ($service[7] as $sectorName) {
-                    if (isset($sectorLookup[$sectorName])) {
-                        $joinStatement->execute([$serviceId, $sectorLookup[$sectorName]]);
-                    }
-                }
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM mandates')->fetchColumn() === 0) {
-            $services = $pdo->query('SELECT id, slug, label FROM services ORDER BY sort_order LIMIT 6')->fetchAll();
-            $statement = $pdo->prepare('INSERT INTO mandates (service_id, custom_label, sort_order) VALUES (?, ?, ?)');
-            foreach ($services as $index => $service) {
-                $statement->execute([$service['id'], $service['label'], ($index + 1) * 10]);
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM videos')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO videos (title, description, sort_order) VALUES (?, ?, ?)');
-            foreach ($seed['videos'] as $index => $video) {
-                $statement->execute([$video[0], $video[1], ($index + 1) * 10]);
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM projects')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO projects (slug, title, infrastructure_class, scale, location, sector_name, client, summary, body, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            foreach ($seed['projects'] as $project) {
-                $meta = implode(' · ', array_filter([$project[4], $project[5], $project[6]]));
-                $summary = $meta ? 'Selected ACMIRS experience: ' . $meta . '.' : 'Selected ACMIRS infrastructure advisory experience.';
-                $statement->execute([$project[0], $project[1], $project[2], $project[3], $project[4], $project[5], $project[6], $summary, $summary, $project[7]]);
-            }
-        }
-
-        if ((int) $pdo->query('SELECT COUNT(*) FROM insights')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO insights (slug, title, category, excerpt, body, link_label, published_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, "published")');
-            foreach ($seed['insights'] as $index => $insight) {
-                $date = date('Y-m-d H:i:s', strtotime('2026-01-01 +' . $index . ' month'));
-                $statement->execute([$insight[0], $insight[1], $insight[2], $insight[3], $insight[3] . '.', $insight[4], $date]);
-            }
         }
 
         $pdo->commit();
@@ -129,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $message === '') {
       <img src="<?= e(url('assets/brand/Website/Logo-Header.svg')) ?>" alt="ACMIRS">
       <p class="eyebrow-admin">Initial setup</p>
       <h1>Install the ACMIRS content system</h1>
-      <p>This creates the MySQL tables and migrates the current website content. It is safe to run again; existing records are not overwritten.</p>
+      <p>This creates the MySQL tables and the default administrator account. It is safe to run again; existing records are not overwritten.</p>
       <dl class="config-summary">
         <div><dt>Database server</dt><dd><?= e(DB_HOST . ':' . DB_PORT) ?></dd></div>
         <div><dt>Database name</dt><dd><?= e(DB_NAME) ?></dd></div>

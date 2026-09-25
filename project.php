@@ -26,7 +26,7 @@ detail_header($project['title'], $project['summary']);
     <?php foreach (['scale' => 'Scale', 'location' => 'Location', 'sector_name' => 'Sector', 'client' => 'Client / partner'] as $key => $label): if (!$project[$key]) continue; ?><div><dt><?= e($label) ?></dt><dd><?= e($project[$key]) ?></dd></div><?php endforeach; ?>
   </dl>
   <?php if ($project['summary']): ?><p class="lead"><?= e($project['summary']) ?></p><?php endif; ?>
-  <div><?= nl2br(e($project['body'])) ?></div>
+  <div><?= $project['body'] ?></div>
 </article>
 <?php detail_footer(); ?>
 

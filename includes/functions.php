@@ -8,6 +8,100 @@ function e($value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function sanitize_html(string $html): string
+{
+    $html = trim($html);
+    if ($html === '') {
+        return '';
+    }
+
+    $allowedAttributes = [
+        'p' => [], 'br' => [], 'strong' => [], 'b' => [], 'em' => [], 'i' => [],
+        'u' => [], 's' => [], 'strike' => [], 'blockquote' => [], 'code' => [], 'pre' => [],
+        'h1' => [], 'h2' => [], 'h3' => [], 'h4' => [], 'span' => [], 'div' => [],
+        'ul' => [], 'ol' => [], 'li' => [],
+        'a' => ['href', 'target', 'rel'],
+        'img' => ['src', 'alt'],
+        'table' => [], 'thead' => [], 'tbody' => [], 'tr' => [], 'th' => [], 'td' => [],
+    ];
+    $removeEntirely = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'svg', 'noscript'];
+
+    $document = new DOMDocument();
+    libxml_use_internal_errors(true);
+    $document->loadHTML('<?xml encoding="utf-8"?><div>' . $html . '</div>', LIBXML_NOERROR | LIBXML_NOWARNING);
+    libxml_clear_errors();
+
+    $root = $document->getElementsByTagName('div')->item(0);
+    if (!$root) {
+        return '';
+    }
+
+    $clean = static function (DOMNode $node) use (&$clean, $allowedAttributes, $removeEntirely) {
+        foreach (iterator_to_array($node->childNodes) as $child) {
+            if ($child instanceof DOMComment) {
+                $node->removeChild($child);
+                continue;
+            }
+            if (!$child instanceof DOMElement) {
+                continue;
+            }
+
+            $tag = strtolower($child->tagName);
+            if (!array_key_exists($tag, $allowedAttributes)) {
+                if (in_array($tag, $removeEntirely, true)) {
+                    $node->removeChild($child);
+                } else {
+                    while ($child->firstChild) {
+                        $node->insertBefore($child->firstChild, $child);
+                    }
+                    $node->removeChild($child);
+                }
+                continue;
+            }
+
+            $attributeNames = [];
+            foreach ($child->attributes as $attribute) {
+                $attributeNames[] = $attribute->name;
+            }
+            foreach ($attributeNames as $name) {
+                $lower = strtolower($name);
+                if (!in_array($lower, $allowedAttributes[$tag], true)) {
+                    $child->removeAttribute($name);
+                    continue;
+                }
+                if ($lower === 'href' || $lower === 'src') {
+                    $value = $child->getAttribute($name);
+                    $scheme = strtolower((string) parse_url($value, PHP_URL_SCHEME));
+                    $allowedSchemes = $lower === 'src' ? ['http', 'https', 'data'] : ['http', 'https', 'mailto', 'tel'];
+                    if ($scheme !== '' && !in_array($scheme, $allowedSchemes, true)) {
+                        $child->removeAttribute($name);
+                    } elseif ($lower === 'src' && $scheme === 'data' && !preg_match('~^data:image/(png|jpe?g|gif|webp);base64,~i', $value)) {
+                        $child->removeAttribute($name);
+                    }
+                }
+            }
+
+            if ($tag === 'a') {
+                $child->setAttribute('rel', 'noopener noreferrer');
+                if ($child->getAttribute('target') !== '_blank') {
+                    $child->removeAttribute('target');
+                }
+            }
+
+            $clean($child);
+        }
+    };
+
+    $clean($root);
+
+    $output = '';
+    foreach (iterator_to_array($root->childNodes) as $child) {
+        $output .= (string) $document->saveHTML($child);
+    }
+
+    return trim($output);
+}
+
 function app_base_url(): string
 {
     $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');

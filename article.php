@@ -23,6 +23,6 @@ detail_header($article['title'], $article['excerpt']);
 <article class="detail-content">
   <?php if ($article['image_path']): ?><img src="<?= e($article['image_path']) ?>" alt=""><?php endif; ?>
   <p class="lead"><?= e($article['excerpt']) ?></p>
-  <div><?= nl2br(e($article['body'])) ?></div>
+  <div><?= $article['body'] ?></div>
 </article>
 <?php detail_footer(); ?>

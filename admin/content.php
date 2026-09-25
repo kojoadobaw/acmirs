@@ -59,7 +59,7 @@ function content_definitions(): array
                 'sector_name' => ['label' => 'Sector', 'type' => 'text'],
                 'client' => ['label' => 'Client / partner', 'type' => 'text'],
                 'summary' => ['label' => 'Summary', 'type' => 'textarea'],
-                'body' => ['label' => 'Project detail', 'type' => 'textarea', 'rows' => 10],
+                'body' => ['label' => 'Project detail', 'type' => 'richtext', 'rows' => 14, 'help' => 'Formatted content shown on the project detail page.'],
                 'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
                 'status' => ['label' => 'Status', 'type' => 'select', 'options' => ['published' => 'Published', 'draft' => 'Draft']],
@@ -73,7 +73,7 @@ function content_definitions(): array
                 'title' => ['label' => 'Title', 'type' => 'text', 'required' => true],
                 'category' => ['label' => 'Category', 'type' => 'text', 'required' => true],
                 'excerpt' => ['label' => 'Short summary', 'type' => 'textarea', 'required' => true],
-                'body' => ['label' => 'Article content', 'type' => 'textarea', 'rows' => 14, 'help' => 'Plain text; paragraphs are preserved on the public page.'],
+                'body' => ['label' => 'Article content', 'type' => 'richtext', 'rows' => 14, 'help' => 'Formatted content shown on the insight detail page.'],
                 'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
                 'link_label' => ['label' => 'Link label', 'type' => 'text'],
                 'published_at' => ['label' => 'Publication date', 'type' => 'datetime-local', 'required' => true],
@@ -139,6 +139,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (strlen($value) === 16) {
                     $value .= ':00';
                 }
+            }
+            if ($field['type'] === 'richtext') {
+                $value = sanitize_html((string) $value);
             }
             if (!empty($field['required']) && $value === '') {
                 throw new RuntimeException($field['label'] . ' is required.');
@@ -267,6 +270,8 @@ admin_header($definition['label']);
         ?>
         <?php if ($field['type'] === 'checkbox'): ?>
           <label class="checkbox-field"><input type="checkbox" name="<?= e($column) ?>" value="1" <?= (int) $value === 1 ? 'checked' : '' ?>><span><?= e($field['label']) ?></span></label>
+        <?php elseif ($field['type'] === 'richtext'): ?>
+          <label><?= e($field['label']) ?><textarea class="rte" name="<?= e($column) ?>" rows="<?= (int) ($field['rows'] ?? 12) ?>"><?= e((string) $value) ?></textarea><?php if (!empty($field['help'])): ?><small><?= e($field['help']) ?></small><?php endif; ?></label>
         <?php elseif ($field['type'] === 'textarea' || $field['type'] === 'lines'): ?>
           <label><?= e($field['label']) ?><textarea name="<?= e($column) ?>" rows="<?= (int) ($field['rows'] ?? 5) ?>" <?= !empty($field['required']) ? 'required' : '' ?>><?= e((string) $value) ?></textarea><?php if (!empty($field['help'])): ?><small><?= e($field['help']) ?></small><?php endif; ?></label>
         <?php elseif ($field['type'] === 'select'): ?>

@@ -22,6 +22,7 @@ function admin_header(string $title)
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title><?= e($title) ?> · ACMIRS CMS</title>
       <link rel="stylesheet" href="<?= e(url('assets/css/admin.css')) ?>">
+      <script src="https://cdn.tiny.cloud/1/fcl57xlaannxwafo0cd2pzcoirwveokva1gywtxbft6e35hm/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     </head>
     <body class="admin-body">
       <header class="admin-topbar">
@@ -65,5 +66,23 @@ function admin_footer()
     } else {
         echo '</main>';
     }
+    ?>
+    <script>
+      if (window.tinymce) {
+        tinymce.init({
+          selector: 'textarea.rte',
+          plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          menubar: false,
+          branding: false,
+          body_class: 'detail-content',
+          content_css: [
+            'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap',
+            <?= json_encode(url('assets/css/cms-overrides.css')) ?>
+          ]
+        });
+      }
+    </script>
+    <?php
     echo '</body></html>';
 }

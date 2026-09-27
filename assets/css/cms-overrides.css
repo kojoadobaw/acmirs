@@ -29,7 +29,12 @@
 .insights-empty { grid-column: 1 / -1; padding: 2rem; border: 1px solid rgba(20,61,52,.16); color: #52615d; background: rgba(255,255,255,.45); }
 
 .detail-page { background: #f5f1e8; color: #173b34; }
-.site-header--solid { position: static; background: #0c322b; }
+.site-header--solid {
+  position: static;
+  background: #0c322b;
+  box-shadow: 0 0 0 100vmax #0c322b;
+  clip-path: inset(0 -100vmax);
+}
 .detail-main { min-height: 70vh; }
 .detail-hero {
   position: relative;

@@ -1593,10 +1593,13 @@ img { max-width: 100%; }
 }
 
 .sector-card {
+  display: block;
   background: var(--sand);
   border: 1px solid var(--line);
   padding: 32px 24px;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
   transition: box-shadow 200ms ease, transform 200ms ease;
 }
 .sector-card:hover {

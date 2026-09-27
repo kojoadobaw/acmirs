@@ -228,6 +228,7 @@ function icon_svg(string $key): string
         'digital' => '<circle cx="16" cy="22" r="2.5"/><path d="M10.5 17.5a8 8 0 0 1 11 0M6 13a14 14 0 0 1 20 0"/>',
         'agriculture' => '<path d="M16 29V13"/><path d="M16 17c0-5 4-9 9-9 0 5-4 9-9 9zM16 22c0-5-4-9-9-9 0 5 4 9 9 9z"/><path d="M6 29h20"/>',
         'oil-gas' => '<path d="M6 29V11l8-5 8 5v18"/><path d="M22 16h4v13M2 29h28"/><path d="M11 15h6M11 21h6"/>',
+        'aviation' => '<path d="M16 3v11l12 7v3l-12-4-12 4v-3l12-7z"/><path d="M13 24l-2 5h10l-2-5z"/>',
     ];
     $body = $icons[$key] ?? '<circle cx="16" cy="16" r="11"/><path d="M16 9v14M9 16h14"/>';
     return '<svg viewBox="0 0 32 32" aria-hidden="true">' . $body . '</svg>';

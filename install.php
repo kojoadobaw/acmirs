@@ -52,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $message === '') {
         }
 
         if ((int) $pdo->query('SELECT COUNT(*) FROM sectors')->fetchColumn() === 0) {
-            $statement = $pdo->prepare('INSERT INTO sectors (name, description, icon, sort_order) VALUES (?, ?, ?, ?)');
+            $statement = $pdo->prepare('INSERT INTO sectors (slug, name, description, icon, sort_order) VALUES (?, ?, ?, ?, ?)');
             foreach ($seed['sectors'] as $index => $sector) {
-                $statement->execute([$sector[0], $sector[1], $sector[2], ($index + 1) * 10]);
+                $statement->execute([slugify($sector[0]), $sector[0], $sector[1], $sector[2], ($index + 1) * 10]);
             }
         }
 

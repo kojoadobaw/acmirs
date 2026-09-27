@@ -13,6 +13,8 @@ function admin_header(string $title)
         'projects' => 'Experience',
         'insights' => 'Insights',
         'mandates' => 'Hero Mandate',
+        'staff' => 'Our Team',
+        'newsroom' => 'Newsroom',
     ];
     ?>
     <!doctype html>

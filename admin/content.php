@@ -26,11 +26,14 @@ function content_definitions(): array
         ],
         'sectors' => [
             'label' => 'Sectors', 'singular' => 'sector', 'title_column' => 'name',
-            'description' => 'Controls the sector cards and service relationships.',
+            'description' => 'Controls the sector cards, sector detail pages, and service relationships.',
             'fields' => [
+                'slug' => ['label' => 'Slug', 'type' => 'text', 'help' => 'Leave blank to generate from the name. Used in the sector page URL.'],
                 'name' => ['label' => 'Name', 'type' => 'text', 'required' => true],
-                'description' => ['label' => 'Description', 'type' => 'textarea', 'required' => true],
-                'icon' => ['label' => 'Icon', 'type' => 'select', 'options' => ['energy' => 'Energy', 'transport' => 'Transport', 'water' => 'Water', 'oil-gas' => 'Oil & Gas', 'marine' => 'Marine', 'urban' => 'Urban', 'digital' => 'Digital', 'industry' => 'Industrial', 'agriculture' => 'Agriculture', 'default' => 'General']],
+                'description' => ['label' => 'Short description', 'type' => 'textarea', 'required' => true, 'help' => 'Shown on the homepage sector card.'],
+                'body' => ['label' => 'Sector detail content', 'type' => 'richtext', 'help' => 'Formatted content shown on the sector detail page.'],
+                'image_path' => ['label' => 'Image path or URL', 'type' => 'text', 'help' => 'Optional hero image for the sector detail page.'],
+                'icon' => ['label' => 'Icon', 'type' => 'select', 'options' => ['energy' => 'Energy', 'transport' => 'Transport', 'water' => 'Water', 'oil-gas' => 'Oil & Gas', 'marine' => 'Marine', 'urban' => 'Urban', 'digital' => 'Digital', 'industry' => 'Industrial', 'agriculture' => 'Agriculture', 'aviation' => 'Aviation', 'default' => 'General']],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
                 'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
             ],
@@ -91,6 +94,38 @@ function content_definitions(): array
                 'is_active' => ['label' => 'Visible in hero', 'type' => 'checkbox'],
             ],
         ],
+        'staff' => [
+            'label' => 'Our Team', 'singular' => 'team member', 'title_column' => 'name',
+            'description' => 'Key staff shown on the team page, each with their own detail page.',
+            'fields' => [
+                'slug' => ['label' => 'Slug', 'type' => 'text', 'help' => 'Leave blank to generate from the name.'],
+                'name' => ['label' => 'Name', 'type' => 'text', 'required' => true],
+                'role' => ['label' => 'Title / role', 'type' => 'text', 'required' => true],
+                'image_path' => ['label' => 'Photo path or URL', 'type' => 'text'],
+                'short_bio' => ['label' => 'Short summary', 'type' => 'textarea', 'help' => 'Shown on the team listing page.'],
+                'bio' => ['label' => 'Full biography', 'type' => 'richtext', 'rows' => 14, 'help' => 'Qualifications, expertise and leadership roles — shown on the detail page.'],
+                'sort_order' => ['label' => 'Display order', 'type' => 'number'],
+                'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
+            ],
+        ],
+        'newsroom' => [
+            'label' => 'Newsroom', 'singular' => 'newsroom item', 'title_column' => 'title',
+            'description' => 'Careers, continental opportunities, bids for partnerships, and press.',
+            'fields' => [
+                'slug' => ['label' => 'Slug', 'type' => 'text', 'help' => 'Leave blank to generate from the title.'],
+                'title' => ['label' => 'Title', 'type' => 'text', 'required' => true],
+                'category' => ['label' => 'Category', 'type' => 'select', 'options' => ['career' => 'Career', 'bid' => 'Bid / Tender', 'partnership' => 'Partnership', 'press' => 'Press']],
+                'excerpt' => ['label' => 'Short summary', 'type' => 'textarea', 'required' => true],
+                'body' => ['label' => 'Full detail', 'type' => 'richtext', 'rows' => 14],
+                'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
+                'location' => ['label' => 'Location', 'type' => 'text'],
+                'closing_date' => ['label' => 'Closing date', 'type' => 'date', 'help' => 'Optional application or bid deadline.'],
+                'external_url' => ['label' => 'External application / bid link', 'type' => 'url', 'help' => 'Optional. Shown as a call-to-action on the detail page.'],
+                'published_at' => ['label' => 'Publication date', 'type' => 'datetime-local', 'required' => true],
+                'status' => ['label' => 'Status', 'type' => 'select', 'options' => ['published' => 'Published', 'draft' => 'Draft']],
+                'featured' => ['label' => 'Feature this item', 'type' => 'checkbox'],
+            ],
+        ],
     ];
 }
 
@@ -143,6 +178,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($field['type'] === 'richtext') {
                 $value = sanitize_html((string) $value);
             }
+            if ($field['type'] === 'date' && $value === '') {
+                $value = null;
+            }
             if (!empty($field['required']) && $value === '') {
                 throw new RuntimeException($field['label'] . ' is required.');
             }
@@ -153,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array('slug', $columns, true)) {
             $position = array_search('slug', $columns, true);
             if ($values[$position] === '') {
-                $source = (string) ($_POST['title'] ?? $_POST['label'] ?? 'item');
+                $source = (string) ($_POST['title'] ?? $_POST['label'] ?? $_POST['name'] ?? 'item');
                 $values[$position] = slugify($source);
             } else {
                 $values[$position] = slugify((string) $values[$position]);
@@ -230,7 +268,7 @@ if ($type === 'services' && $id > 0 && !$error) {
 
 $sectorOptions = $type === 'services' ? fetch_all('SELECT id, name FROM sectors ORDER BY sort_order, name') : [];
 $serviceOptions = $type === 'mandates' ? fetch_all('SELECT id, label FROM services WHERE is_active = 1 ORDER BY sort_order, label') : [];
-$orderBy = $type === 'insights' ? 'published_at DESC, id DESC' : 'sort_order ASC, id DESC';
+$orderBy = in_array($type, ['insights', 'newsroom'], true) ? 'published_at DESC, id DESC' : 'sort_order ASC, id DESC';
 $records = fetch_all('SELECT * FROM `' . $table . '` ORDER BY ' . $orderBy);
 
 admin_header($definition['label']);

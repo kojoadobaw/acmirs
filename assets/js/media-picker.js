@@ -13,19 +13,19 @@
   function ensureModal() {
     if (modal) return modal;
     modal = document.createElement("div");
-    modal.className = "media-modal";
+    modal.className = "acmirs-picker";
     modal.innerHTML =
-      '<div class="media-modal-backdrop" data-media-close></div>' +
-      '<div class="media-modal-panel">' +
-        '<div class="media-modal-head"><h2>Choose an image</h2><button type="button" class="media-modal-close" data-media-close aria-label="Close">&times;</button></div>' +
-        '<div class="media-modal-grid" data-media-grid></div>' +
-        '<p class="media-modal-empty" data-media-empty style="display:none">No images uploaded yet. Visit the Media Library to upload one.</p>' +
+      '<div class="acmirs-picker-backdrop" data-acmirs-close></div>' +
+      '<div class="acmirs-picker-panel">' +
+        '<div class="acmirs-picker-head"><h2>Choose an image</h2><button type="button" class="acmirs-picker-close" data-acmirs-close aria-label="Close">&times;</button></div>' +
+        '<div class="acmirs-picker-grid" data-acmirs-grid></div>' +
+        '<p class="acmirs-picker-empty" data-acmirs-empty style="display:none">No images uploaded yet. Visit the Media Library to upload one.</p>' +
       '</div>';
     document.body.appendChild(modal);
-    grid = modal.querySelector("[data-media-grid]");
-    emptyNotice = modal.querySelector("[data-media-empty]");
+    grid = modal.querySelector("[data-acmirs-grid]");
+    emptyNotice = modal.querySelector("[data-acmirs-empty]");
     modal.addEventListener("click", function (event) {
-      if (event.target.closest("[data-media-close]")) closeModal();
+      if (event.target.closest("[data-acmirs-close]")) closeModal();
     });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") closeModal();
@@ -36,12 +36,12 @@
   function openModal(targetId) {
     currentTarget = document.getElementById(targetId);
     ensureModal();
-    modal.classList.add("is-open");
+    modal.classList.add("acmirs-open");
     loadImages();
   }
 
   function closeModal() {
-    if (modal) modal.classList.remove("is-open");
+    if (modal) modal.classList.remove("acmirs-open");
   }
 
   function renderImages(images) {
@@ -50,7 +50,7 @@
     images.forEach(function (image) {
       var button = document.createElement("button");
       button.type = "button";
-      button.className = "media-modal-item";
+      button.className = "acmirs-picker-item";
       button.innerHTML = '<img src="' + resolveUrl(image.path) + '" alt="" loading="lazy">';
       button.addEventListener("click", function () { selectImage(image); });
       grid.appendChild(button);
@@ -62,7 +62,7 @@
       renderImages(cachedImages);
       return;
     }
-    grid.innerHTML = '<p class="media-modal-loading">Loading…</p>';
+    grid.innerHTML = '<p class="acmirs-picker-loading">Loading…</p>';
     fetch(resolveUrl("admin/media.php?format=json"), { credentials: "same-origin" })
       .then(function (response) { return response.json(); })
       .then(function (images) {
@@ -70,7 +70,7 @@
         renderImages(images);
       })
       .catch(function () {
-        grid.innerHTML = '<p class="media-modal-loading">Could not load images.</p>';
+        grid.innerHTML = '<p class="acmirs-picker-loading">Could not load images.</p>';
       });
   }
 

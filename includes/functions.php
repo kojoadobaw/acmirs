@@ -8,6 +8,61 @@ function e($value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function social_link(string $url): string
+{
+    $url = trim($url);
+    if ($url === '') {
+        return '';
+    }
+    $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+    return in_array($scheme, ['http', 'https'], true) ? $url : '';
+}
+
+function handle_media_upload(array $file): array
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('The file could not be uploaded.');
+    }
+    if ((int) $file['size'] > 5 * 1024 * 1024) {
+        throw new RuntimeException('Images must be 5MB or smaller.');
+    }
+
+    $info = @getimagesize($file['tmp_name']);
+    if ($info === false) {
+        throw new RuntimeException('That file is not a valid image.');
+    }
+
+    $allowedTypes = [
+        IMAGETYPE_JPEG => 'jpg',
+        IMAGETYPE_PNG => 'png',
+        IMAGETYPE_GIF => 'gif',
+        IMAGETYPE_WEBP => 'webp',
+    ];
+    if (!isset($allowedTypes[$info[2]])) {
+        throw new RuntimeException('Only JPEG, PNG, GIF, and WebP images are supported.');
+    }
+
+    $filename = bin2hex(random_bytes(12)) . '.' . $allowedTypes[$info[2]];
+    $destination = PROJECT_ROOT . '/uploads/' . $filename;
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new RuntimeException('The file could not be saved.');
+    }
+
+    $statement = db()->prepare(
+        'INSERT INTO media (filename, original_name, mime_type, size, width, height) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    $statement->execute([
+        $filename,
+        basename((string) $file['name']),
+        (string) $info['mime'],
+        (int) $file['size'],
+        (int) $info[0],
+        (int) $info[1],
+    ]);
+
+    return ['id' => (int) db()->lastInsertId(), 'path' => 'uploads/' . $filename];
+}
+
 function sanitize_html(string $html): string
 {
     $html = trim($html);

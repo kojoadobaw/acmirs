@@ -32,7 +32,7 @@ function content_definitions(): array
                 'name' => ['label' => 'Name', 'type' => 'text', 'required' => true],
                 'description' => ['label' => 'Short description', 'type' => 'textarea', 'required' => true, 'help' => 'Shown on the homepage sector card.'],
                 'body' => ['label' => 'Sector detail content', 'type' => 'richtext', 'help' => 'Formatted content shown on the sector detail page.'],
-                'image_path' => ['label' => 'Image path or URL', 'type' => 'text', 'help' => 'Optional hero image for the sector detail page.'],
+                'image_path' => ['label' => 'Image', 'type' => 'image', 'help' => 'Optional hero image for the sector detail page.'],
                 'icon' => ['label' => 'Icon', 'type' => 'select', 'options' => ['energy' => 'Energy', 'transport' => 'Transport', 'water' => 'Water', 'oil-gas' => 'Oil & Gas', 'marine' => 'Marine', 'urban' => 'Urban', 'digital' => 'Digital', 'industry' => 'Industrial', 'agriculture' => 'Agriculture', 'aviation' => 'Aviation', 'default' => 'General']],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
                 'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
@@ -45,7 +45,7 @@ function content_definitions(): array
                 'title' => ['label' => 'Title', 'type' => 'text', 'required' => true],
                 'description' => ['label' => 'Description', 'type' => 'textarea'],
                 'video_url' => ['label' => 'Video URL', 'type' => 'url', 'help' => 'Leave empty to retain a labelled placeholder.'],
-                'thumbnail_path' => ['label' => 'Thumbnail path or URL', 'type' => 'text', 'help' => 'Optional. Example: assets/img/video-cover.jpg'],
+                'thumbnail_path' => ['label' => 'Thumbnail', 'type' => 'image', 'help' => 'Optional.'],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
                 'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
             ],
@@ -63,7 +63,7 @@ function content_definitions(): array
                 'client' => ['label' => 'Client / partner', 'type' => 'text'],
                 'summary' => ['label' => 'Summary', 'type' => 'textarea'],
                 'body' => ['label' => 'Project detail', 'type' => 'richtext', 'rows' => 14, 'help' => 'Formatted content shown on the project detail page.'],
-                'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
+                'image_path' => ['label' => 'Image', 'type' => 'image'],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
                 'status' => ['label' => 'Status', 'type' => 'select', 'options' => ['published' => 'Published', 'draft' => 'Draft']],
             ],
@@ -77,7 +77,7 @@ function content_definitions(): array
                 'category' => ['label' => 'Category', 'type' => 'text', 'required' => true],
                 'excerpt' => ['label' => 'Short summary', 'type' => 'textarea', 'required' => true],
                 'body' => ['label' => 'Article content', 'type' => 'richtext', 'rows' => 14, 'help' => 'Formatted content shown on the insight detail page.'],
-                'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
+                'image_path' => ['label' => 'Image', 'type' => 'image'],
                 'link_label' => ['label' => 'Link label', 'type' => 'text'],
                 'published_at' => ['label' => 'Publication date', 'type' => 'datetime-local', 'required' => true],
                 'status' => ['label' => 'Status', 'type' => 'select', 'options' => ['published' => 'Published', 'draft' => 'Draft']],
@@ -94,6 +94,15 @@ function content_definitions(): array
                 'is_active' => ['label' => 'Visible in hero', 'type' => 'checkbox'],
             ],
         ],
+        'offices' => [
+            'label' => 'Offices', 'singular' => 'office', 'title_column' => 'name',
+            'description' => 'Controls the office locations shown in the footer.',
+            'fields' => [
+                'name' => ['label' => 'City', 'type' => 'text', 'required' => true],
+                'sort_order' => ['label' => 'Display order', 'type' => 'number'],
+                'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
+            ],
+        ],
         'staff' => [
             'label' => 'Our Team', 'singular' => 'team member', 'title_column' => 'name',
             'description' => 'Key staff shown on the team page, each with their own detail page.',
@@ -101,7 +110,7 @@ function content_definitions(): array
                 'slug' => ['label' => 'Slug', 'type' => 'text', 'help' => 'Leave blank to generate from the name.'],
                 'name' => ['label' => 'Name', 'type' => 'text', 'required' => true],
                 'role' => ['label' => 'Title / role', 'type' => 'text', 'required' => true],
-                'image_path' => ['label' => 'Photo path or URL', 'type' => 'text'],
+                'image_path' => ['label' => 'Photo', 'type' => 'image'],
                 'short_bio' => ['label' => 'Short summary', 'type' => 'textarea', 'help' => 'Shown on the team listing page.'],
                 'bio' => ['label' => 'Full biography', 'type' => 'richtext', 'rows' => 14, 'help' => 'Qualifications, expertise and leadership roles — shown on the detail page.'],
                 'sort_order' => ['label' => 'Display order', 'type' => 'number'],
@@ -117,7 +126,7 @@ function content_definitions(): array
                 'category' => ['label' => 'Category', 'type' => 'select', 'options' => ['career' => 'Career', 'bid' => 'Bid / Tender', 'partnership' => 'Partnership', 'press' => 'Press']],
                 'excerpt' => ['label' => 'Short summary', 'type' => 'textarea', 'required' => true],
                 'body' => ['label' => 'Full detail', 'type' => 'richtext', 'rows' => 14],
-                'image_path' => ['label' => 'Image path or URL', 'type' => 'text'],
+                'image_path' => ['label' => 'Image', 'type' => 'image'],
                 'location' => ['label' => 'Location', 'type' => 'text'],
                 'closing_date' => ['label' => 'Closing date', 'type' => 'date', 'help' => 'Optional application or bid deadline.'],
                 'external_url' => ['label' => 'External application / bid link', 'type' => 'url', 'help' => 'Optional. Shown as a call-to-action on the detail page.'],
@@ -310,6 +319,19 @@ admin_header($definition['label']);
           <label class="checkbox-field"><input type="checkbox" name="<?= e($column) ?>" value="1" <?= (int) $value === 1 ? 'checked' : '' ?>><span><?= e($field['label']) ?></span></label>
         <?php elseif ($field['type'] === 'richtext'): ?>
           <label><?= e($field['label']) ?><textarea class="rte" name="<?= e($column) ?>" rows="<?= (int) ($field['rows'] ?? 12) ?>"><?= e((string) $value) ?></textarea><?php if (!empty($field['help'])): ?><small><?= e($field['help']) ?></small><?php endif; ?></label>
+        <?php elseif ($field['type'] === 'image'): ?>
+          <?php
+            $inputId = 'field-' . $column;
+            $previewSrc = $value !== '' ? (preg_match('~^https?://~i', (string) $value) ? (string) $value : url((string) $value)) : '';
+          ?>
+          <label><?= e($field['label']) ?>
+            <div class="image-field">
+              <input type="text" id="<?= e($inputId) ?>" name="<?= e($column) ?>" value="<?= e((string) $value) ?>" placeholder="Choose from gallery, or paste a path/URL">
+              <button type="button" class="button-secondary" data-media-picker="<?= e($inputId) ?>">Choose from gallery</button>
+            </div>
+            <img class="image-field-preview" data-preview-for="<?= e($inputId) ?>" src="<?= e($previewSrc) ?>" alt="" style="<?= $previewSrc === '' ? 'display:none' : '' ?>">
+            <?php if (!empty($field['help'])): ?><small><?= e($field['help']) ?></small><?php endif; ?>
+          </label>
         <?php elseif ($field['type'] === 'textarea' || $field['type'] === 'lines'): ?>
           <label><?= e($field['label']) ?><textarea name="<?= e($column) ?>" rows="<?= (int) ($field['rows'] ?? 5) ?>" <?= !empty($field['required']) ? 'required' : '' ?>><?= e((string) $value) ?></textarea><?php if (!empty($field['help'])): ?><small><?= e($field['help']) ?></small><?php endif; ?></label>
         <?php elseif ($field['type'] === 'select'): ?>

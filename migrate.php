@@ -110,7 +110,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           INDEX newsroom_status_date (status, published_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-        $log[] = 'Ensured staff and newsroom tables exist.';
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS offices (
+          id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(180) NOT NULL,
+          sort_order INT NOT NULL DEFAULT 0,
+          is_active TINYINT(1) NOT NULL DEFAULT 1,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          INDEX offices_active_sort (is_active, sort_order)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS media (
+          id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          filename VARCHAR(255) NOT NULL,
+          original_name VARCHAR(255) NOT NULL,
+          mime_type VARCHAR(100) NOT NULL,
+          size INT UNSIGNED NOT NULL,
+          width INT UNSIGNED NULL,
+          height INT UNSIGNED NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          INDEX media_created (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $log[] = 'Ensured staff, newsroom, offices, and media tables exist.';
+
+        if ((int) $pdo->query('SELECT COUNT(*) FROM offices')->fetchColumn() === 0) {
+            $officeStatement = $pdo->prepare('INSERT INTO offices (name, sort_order) VALUES (?, ?)');
+            foreach (['New York', 'London', 'Beijing', 'Cape Town'] as $index => $office) {
+                $officeStatement->execute([$office, ($index + 1) * 10]);
+            }
+            $log[] = 'Seeded the existing New York/London/Beijing/Cape Town offices.';
+        }
 
         // --- Content: rename "Digital Infrastructure" sector, add "Aviation & Aerospace Advisory" ---
         $renamed = $pdo->prepare('UPDATE sectors SET slug = ?, name = ?, description = ? WHERE slug = ?');

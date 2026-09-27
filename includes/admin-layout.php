@@ -15,6 +15,7 @@ function admin_header(string $title)
         'mandates' => 'Hero Mandate',
         'staff' => 'Our Team',
         'newsroom' => 'Newsroom',
+        'offices' => 'Offices',
     ];
     ?>
     <!doctype html>
@@ -47,6 +48,7 @@ function admin_header(string $title)
             <?php foreach ($types as $key => $label): ?>
               <a href="<?= e(url('admin/content.php?type=' . $key)) ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
+            <a href="<?= e(url('admin/media.php')) ?>">Media Library</a>
             <a href="<?= e(url('admin/settings.php')) ?>">Section settings</a>
             <a href="<?= e(url('admin/change-password.php')) ?>">Change password</a>
           </aside>
@@ -69,6 +71,8 @@ function admin_footer()
         echo '</main>';
     }
     ?>
+    <script>window.ACMIRS_BASE_URL = <?= json_encode(url()) ?>;</script>
+    <script src="<?= e(url('assets/js/media-picker.js')) ?>"></script>
     <script>
       if (window.tinymce) {
         tinymce.init({

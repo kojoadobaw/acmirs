@@ -33,14 +33,21 @@ function detail_header(string $title, string $description = '')
 function detail_footer()
 {
     $footerServices = fetch_all('SELECT label FROM services WHERE is_active = 1 ORDER BY sort_order LIMIT 6');
+    try {
+        $footerOffices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY sort_order, id');
+    } catch (Throwable $exception) {
+        $footerOffices = [];
+    }
+    $linkedinUrl = social_link(setting('social_linkedin'));
+    $twitterUrl = social_link(setting('social_twitter'));
     ?>
       </main>
       <footer class="site-footer" id="contact"><div class="container"><div class="footer-grid">
         <div class="footer-section"><div class="footer-logo"><svg class="logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><image href="<?= e(url('assets/brand/Website/Logo-Footer.svg')) ?>" width="200" height="80"></image></svg></div><p>Global expertise to drive Africa's infrastructure solutions.</p></div>
         <div class="footer-section"><h4>Services</h4><ul><?php foreach ($footerServices as $service): ?><li><a href="<?= e(url('index.php#services')) ?>"><?= e($service['label']) ?></a></li><?php endforeach; ?></ul></div>
         <div class="footer-section"><h4>Company</h4><ul><li><a href="<?= e(url('staff.php')) ?>">Our Team</a></li><li><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a></li></ul></div>
-        <div class="footer-section"><h4>Offices</h4><ul><li>New York</li><li>London</li><li>Beijing</li><li>Cape Town</li></ul></div>
-        <div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li></ul></div>
+        <?php if ($footerOffices): ?><div class="footer-section"><h4>Offices</h4><ul><?php foreach ($footerOffices as $office): ?><li><?= e($office['name']) ?></li><?php endforeach; ?></ul></div><?php endif; ?>
+        <div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li><?php if ($linkedinUrl): ?><li><a href="<?= e($linkedinUrl) ?>" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><?php endif; ?><?php if ($twitterUrl): ?><li><a href="<?= e($twitterUrl) ?>" target="_blank" rel="noopener noreferrer">Twitter</a></li><?php endif; ?></ul></div>
       </div><div class="footer-bottom"><p>&copy; <?= date('Y') ?> ACMIRS. All rights reserved.</p><ul class="footer-legal"><li><a href="<?= e(url()) ?>">Privacy</a></li><li><a href="<?= e(url()) ?>">Terms</a></li></ul></div></div></footer>
       <script src="<?= e(url('assets/js/app.js')) ?>"></script>
     </body>

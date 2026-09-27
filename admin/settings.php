@@ -14,6 +14,7 @@ $fields = [
     'delivery_intro' => 'Delivery introduction', 'cta_title' => 'Closing call-to-action heading',
     'cta_body' => 'Closing call-to-action text', 'contact_email' => 'Contact email',
     'contact_phone' => 'Contact phone',
+    'social_linkedin' => 'LinkedIn URL', 'social_twitter' => 'Twitter / X URL',
     'metric_1_value' => 'Metric 1 value', 'metric_1_suffix' => 'Metric 1 suffix', 'metric_1_label' => 'Metric 1 label',
     'metric_2_value' => 'Metric 2 value', 'metric_2_suffix' => 'Metric 2 suffix', 'metric_2_label' => 'Metric 2 label',
     'metric_3_value' => 'Metric 3 value', 'metric_3_suffix' => 'Metric 3 suffix', 'metric_3_label' => 'Metric 3 label',

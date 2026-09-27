@@ -51,6 +51,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $message === '') {
             }
         }
 
+        if ((int) $pdo->query('SELECT COUNT(*) FROM offices')->fetchColumn() === 0) {
+            $statement = $pdo->prepare('INSERT INTO offices (name, sort_order) VALUES (?, ?)');
+            foreach (['New York', 'London', 'Beijing', 'Cape Town'] as $index => $office) {
+                $statement->execute([$office, ($index + 1) * 10]);
+            }
+        }
+
         if ((int) $pdo->query('SELECT COUNT(*) FROM sectors')->fetchColumn() === 0) {
             $statement = $pdo->prepare('INSERT INTO sectors (slug, name, description, icon, sort_order) VALUES (?, ?, ?, ?, ?)');
             foreach ($seed['sectors'] as $index => $sector) {

@@ -19,7 +19,7 @@ detail_header('Our Team', 'Meet the ACMIRS leadership and advisory team.');
         <?php if ($member['short_bio']): ?><p class="staff-summary"><?= e($member['short_bio']) ?></p><?php endif; ?>
       </a>
     <?php endforeach; ?>
-    <?php if (!$staff): ?><p>Team profiles are coming soon.</p><?php endif; ?>
+    <?php if (!$staff): ?><p class="empty-state">Team profiles are coming soon.</p><?php endif; ?>
   </div>
 </section>
 <?php detail_footer(); ?>

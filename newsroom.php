@@ -25,7 +25,7 @@ detail_header('Newsroom', 'Careers, continental opportunities, bids for partners
         <a href="<?= e(url('newsroom-item.php?slug=' . urlencode($item['slug']))) ?>">Read more →</a>
       </article>
     <?php endforeach; ?>
-    <?php if (!$items): ?><p>No newsroom items are available yet.</p><?php endif; ?>
+    <?php if (!$items): ?><p class="empty-state">No newsroom items are available yet.</p><?php endif; ?>
   </div>
 </section>
 <?php detail_footer(); ?>

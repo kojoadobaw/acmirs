@@ -91,7 +91,14 @@
         if (index >= 0) select(index);
       });
     });
+    function selectFromHash() {
+      var key = window.location.hash.replace(/^#service-/, "");
+      var index = mandates.findIndex(function (item) { return item.key === key; });
+      if (index >= 0) select(index);
+    }
     select(0);
+    selectFromHash();
+    window.addEventListener("hashchange", selectFromHash);
   }
 
   function initCounters() {

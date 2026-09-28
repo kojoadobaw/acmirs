@@ -17,13 +17,30 @@ if (!$member) {
     exit;
 }
 
-detail_header($member['name'], $member['role']);
+detail_header($member['name'], $member['role'], 'profile-page');
 ?>
-<section class="detail-hero"><div><p class="detail-kicker"><?= e($member['role']) ?></p><h1><?= e($member['name']) ?></h1></div></section>
-<article class="detail-content">
-  <?php if ($member['image_path']): ?><img src="<?= e($member['image_path']) ?>" alt="<?= e($member['name']) ?>"><?php endif; ?>
-  <?php if ($member['short_bio']): ?><p class="lead"><?= e($member['short_bio']) ?></p><?php endif; ?>
-  <?php if ($member['bio']): ?><div><?= $member['bio'] ?></div><?php endif; ?>
-  <p><a href="<?= e(url('staff.php')) ?>">← Back to our team</a></p>
-</article>
+<section class="profile-intro">
+  <div class="container">
+    <a class="editorial-back" href="<?= e(url('staff.php')) ?>">← Our team</a>
+    <div class="profile-grid <?= empty($member['image_path']) ? 'profile-grid--text' : '' ?>">
+      <div class="profile-copy">
+        <p class="editorial-kicker">Our people</p>
+        <h1><?= e($member['name']) ?></h1>
+        <p class="profile-position"><?= e($member['role']) ?></p>
+        <?php if ($member['short_bio']): ?><p class="profile-summary"><?= e($member['short_bio']) ?></p><?php endif; ?>
+      </div>
+      <?php if ($member['image_path']): ?><figure class="profile-portrait"><img src="<?= e($member['image_path']) ?>" alt="<?= e($member['name']) ?>"></figure><?php endif; ?>
+    </div>
+  </div>
+</section>
+<?php if ($member['bio']): ?>
+<section class="profile-biography container">
+  <div class="editorial-section-label">Biography</div>
+  <div class="editorial-prose"><?= $member['bio'] ?></div>
+</section>
+<?php endif; ?>
+<section class="editorial-closing container">
+  <div><p class="editorial-kicker">Expertise. Perspective. Partnership.</p><h2>Meet the people behind ACMIRS.</h2></div>
+  <a class="editorial-link" href="<?= e(url('staff.php')) ?>">Explore our team <span aria-hidden="true">↗</span></a>
+</section>
 <?php detail_footer(); ?>

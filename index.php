@@ -75,9 +75,9 @@ $frontMessages = pull_flashes();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/site.css">
-  <link rel="stylesheet" href="assets/css/hero-reveal.css">
-  <link rel="stylesheet" href="assets/css/cms-overrides.css">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/site.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/hero-reveal.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/cms-overrides.css')) ?>">
   <link rel="icon" type="image/svg+xml" href="assets/brand/Website/Favicon.svg">
   <link rel="apple-touch-icon" href="assets/brand/Website/Apple-Touch-Icon.svg">
 </head>
@@ -161,6 +161,6 @@ $frontMessages = pull_flashes();
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="assets/js/hero-reveal.js"></script>
-  <script src="assets/js/app.js"></script>
+  <script src="<?= e(asset_url('assets/js/app.js')) ?>"></script>
 </body>
 </html>

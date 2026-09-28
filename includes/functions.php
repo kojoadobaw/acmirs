@@ -174,6 +174,13 @@ function url(string $path = ''): string
     return app_base_url() . '/' . ltrim($path, '/');
 }
 
+// Content fingerprints keep cached styles in step with deployed templates.
+function asset_url(string $path): string
+{
+    $file = dirname(__DIR__) . '/' . ltrim($path, '/');
+    return url($path) . '?v=' . (is_file($file) ? substr(hash_file('sha256', $file), 0, 12) : '1');
+}
+
 function redirect(string $path)
 {
     header('Location: ' . (strpos($path, 'http') === 0 ? $path : url($path)));

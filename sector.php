@@ -22,17 +22,14 @@ $relatedServices = fetch_all(
     [$sector['id']]
 );
 
-detail_header($sector['name'], $sector['description']);
+detail_header($sector['name'], $sector['description'], 'sector-page');
 ?>
-<section class="detail-hero"><div><p class="detail-kicker">Sector</p><h1><?= e($sector['name']) ?></h1><p class="detail-meta"><?= e($sector['description']) ?></p></div></section>
-<article class="detail-content">
-  <?php if ($sector['image_path']): ?><img src="<?= e($sector['image_path']) ?>" alt=""><?php endif; ?>
-  <?php if ($sector['body']): ?><div><?= $sector['body'] ?></div><?php endif; ?>
-  <?php if ($relatedServices): ?>
-    <h2>Related services</h2>
-    <ul class="detail-related-list">
-      <?php foreach ($relatedServices as $service): ?><li><a href="<?= e(url('#services')) ?>"><?= e($service['label']) ?></a></li><?php endforeach; ?>
-    </ul>
-  <?php endif; ?>
-</article>
+<section class="sector-intro"><div class="container"><a class="editorial-back" href="<?= e(url('index.php#sectors')) ?>">← Our sectors</a><div class="sector-intro-grid"><div><p class="editorial-kicker">Sector expertise</p><h1><?= e($sector['name']) ?></h1><p class="sector-deck"><?= e($sector['description']) ?></p></div><div class="sector-emblem" aria-hidden="true"><?= icon_svg($sector['icon']) ?></div></div></div></section>
+<?php if ($sector['image_path']): ?><figure class="sector-image container"><img src="<?= e($sector['image_path']) ?>" alt=""></figure><?php endif; ?>
+<section class="sector-overview container"><div class="sector-overview-copy"><p class="editorial-section-label">Sector overview</p><div class="editorial-prose"><?php if ($sector['body']): ?><?= $sector['body'] ?><?php else: ?><p><?= e($sector['description']) ?></p><?php endif; ?></div></div>
+  <?php if ($relatedServices): ?><aside class="sector-services" aria-labelledby="services-title"><p class="editorial-kicker">How we help</p><h2 id="services-title">Our capabilities</h2><ul>
+    <?php foreach ($relatedServices as $service): ?><li><a href="<?= e(url('index.php#service-' . $service['slug'])) ?>"><?= e($service['label']) ?><span aria-hidden="true">↗</span></a></li><?php endforeach; ?>
+  </ul></aside><?php endif; ?>
+</section>
+<section class="editorial-closing container"><div><p class="editorial-kicker">From ambition to delivery</p><h2>Discuss your next project.</h2></div><a class="editorial-link" href="<?= e(url('index.php#contact')) ?>">Start a conversation <span aria-hidden="true">↗</span></a></section>
 <?php detail_footer(); ?>

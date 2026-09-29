@@ -45,7 +45,7 @@ admin_header('Inquiries');
           <td><?= e($categoryLabels[$inquiry['category']] ?? ucfirst($inquiry['category'])) ?></td>
           <td>
             <details><summary><?= e(mb_strimwidth($inquiry['message'], 0, 60, '…')) ?></summary><p><?= nl2br(e($inquiry['message'])) ?></p></details>
-            <?php if (!$inquiry['email_sent']): ?><small>Email notification not sent</small><?php endif; ?>
+            <?php if (!$inquiry['email_sent']): ?><small>Email notification not sent<?php if (!empty($inquiry['email_error'])): ?>: <?= e($inquiry['email_error']) ?><?php endif; ?></small><?php endif; ?>
           </td>
           <td><span class="status status--<?= $inquiry['status'] === 'new' ? '' : 'hidden' ?>"><?= e(ucfirst($inquiry['status'])) ?></span></td>
           <td class="row-actions">

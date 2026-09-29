@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             $inquiryId = (int) db()->lastInsertId();
 
-            $sent = send_inquiry_email([
+            $emailResult = send_inquiry_email([
                 'category_label' => $categories[$values['category']],
                 'name' => $values['name'],
                 'company' => $values['company'],
@@ -55,9 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'phone' => $values['phone'],
                 'message' => $values['message'],
             ]);
-            if ($sent) {
-                db()->prepare('UPDATE inquiries SET email_sent = 1 WHERE id = ?')->execute([$inquiryId]);
-            }
+            db()->prepare('UPDATE inquiries SET email_sent = ?, email_error = ? WHERE id = ?')->execute([
+                $emailResult['sent'] ? 1 : 0,
+                $emailResult['sent'] ? null : $emailResult['error'],
+                $inquiryId,
+            ]);
 
             $success = true;
         }

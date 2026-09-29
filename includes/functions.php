@@ -18,15 +18,15 @@ function social_link(string $url): string
     return in_array($scheme, ['http', 'https'], true) ? $url : '';
 }
 
-function send_inquiry_email(array $inquiry): bool
+function send_inquiry_email(array $inquiry): array
 {
     if (SMTP_HOST === '' || SMTP_FROM_EMAIL === '') {
-        return false;
+        return ['sent' => false, 'error' => 'SMTP is not configured (SMTP_HOST/SMTP_FROM_EMAIL empty in .env).'];
     }
 
     $recipient = setting('contact_email');
     if ($recipient === '' || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
-        return false;
+        return ['sent' => false, 'error' => 'No valid contact email is set in Section Settings.'];
     }
 
     require_once PROJECT_ROOT . '/phpmailer/src/Exception.php';
@@ -71,9 +71,10 @@ function send_inquiry_email(array $inquiry): bool
         ]);
 
         $mail->send();
-        return true;
+        return ['sent' => true, 'error' => ''];
     } catch (\Throwable $exception) {
-        return false;
+        $detail = trim((string) $mail->ErrorInfo) !== '' ? $mail->ErrorInfo : $exception->getMessage();
+        return ['sent' => false, 'error' => mb_substr($detail, 0, 500)];
     }
 }
 

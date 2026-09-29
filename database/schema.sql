@@ -168,6 +168,7 @@ CREATE TABLE IF NOT EXISTS inquiries (
   message TEXT NOT NULL,
   status ENUM('new', 'read', 'archived') NOT NULL DEFAULT 'new',
   email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  email_error TEXT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX inquiries_status_created (status, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

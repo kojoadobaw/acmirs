@@ -160,9 +160,23 @@
     function play() { var result = video.play(); if (result && result.catch) result.catch(function () {}); }
     function thrifty() { var connection = navigator.connection; return connection && (connection.saveData === true || /2g/.test(connection.effectiveType || "")); }
     var hd = video.getAttribute("data-src-hd");
-    if (hd && window.innerWidth >= 1200 && !thrifty() && !(reduced && reduced.matches)) {
+    var useHd = hd && window.innerWidth >= 1200 && !thrifty() && !(reduced && reduced.matches);
+    if (useHd) {
       video.src = hd; video.load(); video.addEventListener("canplay", play, { once: true }); play();
     }
+
+    var extra = (video.getAttribute("data-hero-playlist") || "").split(",").map(function (src) { return src.trim(); }).filter(Boolean);
+    if (extra.length) {
+      var playlist = [useHd ? hd : video.currentSrc || video.querySelector("source").src].concat(extra);
+      var index = 0;
+      video.addEventListener("ended", function () {
+        index = (index + 1) % playlist.length;
+        video.src = playlist[index];
+        video.load();
+        video.addEventListener("canplay", play, { once: true });
+      });
+    }
+
     if (!reduced) return;
     function sync() { if (reduced.matches) video.pause(); else play(); }
     sync();

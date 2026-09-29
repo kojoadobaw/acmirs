@@ -95,7 +95,7 @@ $frontMessages = pull_flashes();
 
   <main>
     <section class="hero" id="top">
-      <div class="hero-media" data-hero-media aria-hidden="true"><video autoplay muted loop playsinline preload="metadata" poster="assets/img/hero-golden-hour.jpg" data-hero-video data-src-hd="assets/img/hero.mp4"><source src="assets/img/hero-1280.mp4" type="video/mp4"><img src="assets/img/hero-golden-hour.jpg" alt=""></video></div>
+      <div class="hero-media" data-hero-media aria-hidden="true"><video autoplay muted playsinline preload="metadata" poster="assets/img/hero-golden-hour.jpg" data-hero-video data-src-hd="assets/img/hero.mp4" data-hero-playlist="assets/img/hero_energy.mp4,assets/img/hero_telecoms.mp4"><source src="assets/img/hero-1280.mp4" type="video/mp4"><img src="assets/img/hero-golden-hour.jpg" alt=""></video></div>
       <div class="hero-mask" data-hero-mask aria-hidden="true"><video data-hero-mask-video muted loop playsinline preload="none"><source src="assets/img/hero-1280.mp4" type="video/mp4"></video></div>
       <div class="hero-wash hero-wash--side" data-hero-wash aria-hidden="true"></div><div class="hero-wash hero-wash--vertical" data-hero-wash aria-hidden="true"></div>
       <div class="hero-inner">

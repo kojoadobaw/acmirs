@@ -241,6 +241,58 @@ function asset_url(string $path): string
     return url($path) . '?v=' . (is_file($file) ? substr(hash_file('sha256', $file), 0, 12) : '1');
 }
 
+function absolute_url(string $path = ''): string
+{
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return $scheme . '://' . $host . url($path);
+}
+
+function current_url(): string
+{
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $uri = $_SERVER['REQUEST_URI'] ?? '/';
+    return $scheme . '://' . $host . $uri;
+}
+
+function render_social_meta(string $title, string $description, string $url, string $image = ''): void
+{
+    $resolvedImage = $image !== ''
+        ? (preg_match('~^https?://~i', $image) ? $image : absolute_url($image))
+        : absolute_url('assets/img/hero-golden-hour.jpg');
+    ?>
+    <link rel="canonical" href="<?= e($url) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ACMIRS">
+    <meta property="og:title" content="<?= e($title) ?>">
+    <meta property="og:description" content="<?= e($description) ?>">
+    <meta property="og:url" content="<?= e($url) ?>">
+    <meta property="og:image" content="<?= e($resolvedImage) ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= e($title) ?>">
+    <meta name="twitter:description" content="<?= e($description) ?>">
+    <meta name="twitter:image" content="<?= e($resolvedImage) ?>">
+    <?php
+}
+
+function render_analytics(): void
+{
+    $gaId = trim(setting('analytics_ga_id'));
+    if ($gaId === '') {
+        return;
+    }
+    ?>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= e($gaId) ?>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', <?= json_encode($gaId) ?>);
+    </script>
+    <?php
+}
+
 function redirect(string $path)
 {
     header('Location: ' . (strpos($path, 'http') === 0 ? $path : url($path)));

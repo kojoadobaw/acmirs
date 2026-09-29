@@ -50,6 +50,7 @@ a { color: inherit; }
 .form-actions { display: flex; align-items: center; gap: .8rem; padding-top: .5rem; }
 .settings-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .settings-grid .form-actions { grid-column: 1 / -1; }
+.settings-grid label:has(textarea.rte) { grid-column: 1 / -1; }
 .content-table-wrap { overflow-x: auto; }
 .content-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
 .content-table th { padding: .8rem; text-align: left; color: var(--muted); border-bottom: 2px solid var(--line); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }

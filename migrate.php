@@ -147,7 +147,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
           INDEX inquiries_status_created (status, created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-        $log[] = 'Ensured staff, newsroom, offices, media, and inquiries tables exist.';
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS testimonials (
+          id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          quote TEXT NOT NULL,
+          author_name VARCHAR(180) NOT NULL,
+          author_title VARCHAR(180) NULL,
+          company VARCHAR(180) NULL,
+          logo_path VARCHAR(500) NULL,
+          sort_order INT NOT NULL DEFAULT 0,
+          is_active TINYINT(1) NOT NULL DEFAULT 1,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          INDEX testimonials_active_sort (is_active, sort_order)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $log[] = 'Ensured staff, newsroom, offices, media, inquiries, and testimonials tables exist.';
 
         if (!column_exists($pdo, 'inquiries', 'email_error')) {
             $pdo->exec('ALTER TABLE inquiries ADD COLUMN email_error TEXT NULL AFTER email_sent');

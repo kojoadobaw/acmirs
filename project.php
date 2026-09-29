@@ -17,7 +17,7 @@ if (!$project) {
     exit;
 }
 
-detail_header($project['title'], $project['summary']);
+detail_header($project['title'], $project['summary'], '', (string) $project['image_path']);
 ?>
 <section class="detail-hero"><div><p class="detail-kicker"><?= e($project['infrastructure_class']) ?></p><h1><?= e($project['title']) ?></h1><p class="detail-meta"><?= e(implode(' · ', array_filter([$project['location'], $project['sector_name'], $project['client']]))) ?></p></div></section>
 <article class="detail-content">

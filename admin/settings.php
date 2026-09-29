@@ -18,13 +18,22 @@ $fields = [
     'metric_1_value' => 'Metric 1 value', 'metric_1_suffix' => 'Metric 1 suffix', 'metric_1_label' => 'Metric 1 label',
     'metric_2_value' => 'Metric 2 value', 'metric_2_suffix' => 'Metric 2 suffix', 'metric_2_label' => 'Metric 2 label',
     'metric_3_value' => 'Metric 3 value', 'metric_3_suffix' => 'Metric 3 suffix', 'metric_3_label' => 'Metric 3 label',
+    'testimonials_title' => 'Testimonials heading', 'testimonials_intro' => 'Testimonials introduction',
+    'analytics_ga_id' => 'Google Analytics Measurement ID (e.g. G-XXXXXXX). Leave blank to disable analytics.',
+    'privacy_policy' => 'Privacy policy', 'terms_of_service' => 'Terms of service',
 ];
+
+$richtextFields = ['privacy_policy', 'terms_of_service'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
     $statement = db()->prepare('INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)');
     foreach ($fields as $key => $label) {
-        $statement->execute([$key, trim((string) ($_POST[$key] ?? ''))]);
+        $value = trim((string) ($_POST[$key] ?? ''));
+        if (in_array($key, $richtextFields, true)) {
+            $value = sanitize_html($value);
+        }
+        $statement->execute([$key, $value]);
     }
     flash('success', 'Section settings saved.');
     redirect('admin/settings.php');
@@ -42,7 +51,9 @@ admin_header('Section settings');
   <?= csrf_field() ?>
   <?php foreach ($fields as $key => $label): ?>
     <label><?= e($label) ?>
-      <?php if (strpos($key, 'intro') !== false || strpos($key, 'body') !== false): ?>
+      <?php if (in_array($key, $richtextFields, true)): ?>
+        <textarea class="rte" name="<?= e($key) ?>" rows="12"><?= e($values[$key] ?? '') ?></textarea>
+      <?php elseif (strpos($key, 'intro') !== false || strpos($key, 'body') !== false): ?>
         <textarea name="<?= e($key) ?>" rows="3"><?= e($values[$key] ?? '') ?></textarea>
       <?php else: ?>
         <input name="<?= e($key) ?>" value="<?= e($values[$key] ?? '') ?>">

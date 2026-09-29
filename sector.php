@@ -22,7 +22,7 @@ $relatedServices = fetch_all(
     [$sector['id']]
 );
 
-detail_header($sector['name'], $sector['description'], 'sector-page');
+detail_header($sector['name'], $sector['description'], 'sector-page', (string) $sector['image_path']);
 ?>
 <section class="sector-intro"><div class="container"><a class="editorial-back" href="<?= e(url('index.php#sectors')) ?>">← Our sectors</a><div class="sector-intro-grid"><div><p class="editorial-kicker">Sector expertise</p><h1><?= e($sector['name']) ?></h1><p class="sector-deck"><?= e($sector['description']) ?></p></div><div class="sector-emblem" aria-hidden="true"><?= icon_svg($sector['icon']) ?></div></div></div></section>
 <?php if ($sector['image_path']): ?><figure class="sector-image container"><img src="<?= e($sector['image_path']) ?>" alt=""></figure><?php endif; ?>

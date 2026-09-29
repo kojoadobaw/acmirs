@@ -21,7 +21,7 @@ $relatedStatement = db()->prepare("SELECT slug, title, category, image_path FROM
 $relatedStatement->execute([$article['id'], $article['category']]);
 $relatedArticles = $relatedStatement->fetchAll();
 $readingMinutes = max(1, (int) ceil(str_word_count(strip_tags($article['excerpt'] . ' ' . $article['body'])) / 220));
-detail_header($article['title'], $article['excerpt'], 'insight-page');
+detail_header($article['title'], $article['excerpt'], 'insight-page', (string) $article['image_path']);
 ?>
 <article class="editorial-article">
   <header class="article-intro container">

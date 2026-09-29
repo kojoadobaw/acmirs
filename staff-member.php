@@ -17,7 +17,7 @@ if (!$member) {
     exit;
 }
 
-detail_header($member['name'], $member['role'], 'profile-page');
+detail_header($member['name'], $member['role'], 'profile-page', (string) $member['image_path']);
 ?>
 <article class="adviser-profile container">
   <a class="editorial-back" href="<?= e(url('staff.php')) ?>">← Our team</a>

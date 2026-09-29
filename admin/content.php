@@ -94,6 +94,19 @@ function content_definitions(): array
                 'is_active' => ['label' => 'Visible in hero', 'type' => 'checkbox'],
             ],
         ],
+        'testimonials' => [
+            'label' => 'Testimonials', 'singular' => 'testimonial', 'title_column' => 'author_name',
+            'description' => 'Client quotes shown as social proof on the homepage.',
+            'fields' => [
+                'quote' => ['label' => 'Quote', 'type' => 'textarea', 'required' => true],
+                'author_name' => ['label' => 'Author name', 'type' => 'text', 'required' => true],
+                'author_title' => ['label' => 'Author title', 'type' => 'text'],
+                'company' => ['label' => 'Company', 'type' => 'text'],
+                'logo_path' => ['label' => 'Company logo', 'type' => 'image', 'help' => 'Optional.'],
+                'sort_order' => ['label' => 'Display order', 'type' => 'number'],
+                'is_active' => ['label' => 'Visible on website', 'type' => 'checkbox'],
+            ],
+        ],
         'offices' => [
             'label' => 'Offices', 'singular' => 'office', 'title_column' => 'name',
             'description' => 'Controls the office locations shown in the footer.',

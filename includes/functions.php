@@ -8,6 +8,85 @@ function e($value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+const SUPPORTED_LOCALES = ['en' => 'English', 'fr' => 'Français', 'es' => 'Español'];
+
+function current_locale(): string
+{
+    static $locale = null;
+    if ($locale !== null) {
+        return $locale;
+    }
+
+    $requested = strtolower((string) ($_GET['lang'] ?? ''));
+    if (array_key_exists($requested, SUPPORTED_LOCALES)) {
+        $locale = $requested;
+        if (($_COOKIE['acmirs_lang'] ?? '') !== $locale && !headers_sent()) {
+            setcookie('acmirs_lang', $locale, [
+                'expires' => time() + 60 * 60 * 24 * 365,
+                'path' => (app_base_url() ?: '') . '/',
+                'samesite' => 'Lax',
+            ]);
+        }
+        return $locale;
+    }
+
+    $cookie = strtolower((string) ($_COOKIE['acmirs_lang'] ?? ''));
+    $locale = array_key_exists($cookie, SUPPORTED_LOCALES) ? $cookie : 'en';
+    return $locale;
+}
+
+function locale_switch_url(string $targetLocale): string
+{
+    $query = $_GET;
+    $query['lang'] = $targetLocale;
+    $path = strtok($_SERVER['REQUEST_URI'] ?? url(), '?');
+    return $path . '?' . http_build_query($query);
+}
+
+// Static UI copy (nav, footer, buttons). CMS content uses tf()/setting_t() instead.
+function t(string $key, string $fallback = ''): string
+{
+    static $strings = [];
+    $locale = current_locale();
+    if (!isset($strings[$locale])) {
+        $file = dirname(__DIR__) . '/lang/' . $locale . '.php';
+        $strings[$locale] = is_file($file) ? require $file : [];
+    }
+    if (isset($strings[$locale][$key]) && $strings[$locale][$key] !== '') {
+        return $strings[$locale][$key];
+    }
+    if (!isset($strings['en'])) {
+        $strings['en'] = require dirname(__DIR__) . '/lang/en.php';
+    }
+    return $strings['en'][$key] ?? ($fallback !== '' ? $fallback : $key);
+}
+
+// Translated CMS field: falls back to the English column when no translation was entered.
+function tf(array $row, string $column): string
+{
+    $locale = current_locale();
+    if ($locale !== 'en') {
+        $translated = trim((string) ($row[$column . '_' . $locale] ?? ''));
+        if ($translated !== '') {
+            return $translated;
+        }
+    }
+    return (string) ($row[$column] ?? '');
+}
+
+// Translated site setting: falls back to the English (base) setting when no translation was entered.
+function setting_t(string $key, string $fallback = ''): string
+{
+    $locale = current_locale();
+    if ($locale !== 'en') {
+        $translated = trim(setting($key . '_' . $locale));
+        if ($translated !== '') {
+            return $translated;
+        }
+    }
+    return setting($key, $fallback);
+}
+
 function social_link(string $url): string
 {
     $url = trim($url);
@@ -276,6 +355,33 @@ function render_social_meta(string $title, string $description, string $url, str
     <?php
 }
 
+function render_hreflang(): void
+{
+    $path = strtok($_SERVER['REQUEST_URI'] ?? url(), '?');
+    $query = $_GET;
+    foreach (array_keys(SUPPORTED_LOCALES) as $code) {
+        $query['lang'] = $code;
+        ?>
+        <link rel="alternate" hreflang="<?= e($code) ?>" href="<?= e(absolute_url(ltrim($path, '/')) . '?' . http_build_query($query)) ?>">
+        <?php
+    }
+    $query['lang'] = 'en';
+    ?>
+    <link rel="alternate" hreflang="x-default" href="<?= e(absolute_url(ltrim($path, '/')) . '?' . http_build_query($query)) ?>">
+    <?php
+}
+
+// Wraps each word in the spans the hero-reveal animation expects, matching the existing hardcoded headline markup.
+function wrapped_words(string $text): string
+{
+    $words = preg_split('/\s+/', trim($text)) ?: [];
+    $output = '';
+    foreach ($words as $word) {
+        $output .= '<span class="word-wrap"><span class="word">' . e($word) . '</span></span> ';
+    }
+    return trim($output);
+}
+
 function render_analytics(): void
 {
     $gaId = trim(setting('analytics_ga_id'));
@@ -290,6 +396,18 @@ function render_analytics(): void
       gtag('js', new Date());
       gtag('config', <?= json_encode($gaId) ?>);
     </script>
+    <?php
+}
+
+function render_language_switcher(): void
+{
+    $current = current_locale();
+    ?>
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <?php foreach (SUPPORTED_LOCALES as $code => $label): ?>
+        <a href="<?= e(locale_switch_url($code)) ?>" hreflang="<?= e($code) ?>" lang="<?= e($code) ?>" class="<?= $code === $current ? 'is-active' : '' ?>" aria-current="<?= $code === $current ? 'true' : 'false' ?>"><?= e(strtoupper($code)) ?></a>
+      <?php endforeach; ?>
+    </div>
     <?php
 }
 

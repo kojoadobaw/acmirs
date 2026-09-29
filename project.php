@@ -11,22 +11,22 @@ $project = $statement->fetch();
 
 if (!$project) {
     http_response_code(404);
-    detail_header('Project not found');
-    echo '<section class="detail-content"><h1>Project not found</h1><p>The project may have moved or is not yet published.</p><p><a href="' . e(url('#experience')) . '">Browse ACMIRS experience</a></p></section>';
+    detail_header(t('project.not_found'));
+    echo '<section class="detail-content"><h1>' . e(t('project.not_found')) . '</h1><p>' . e(t('project.not_found_body')) . '</p><p><a href="' . e(url('#experience')) . '">' . e(t('project.browse')) . '</a></p></section>';
     detail_footer();
     exit;
 }
 
-detail_header($project['title'], $project['summary'], '', (string) $project['image_path']);
+detail_header(tf($project, 'title'), tf($project, 'summary'), '', (string) $project['image_path']);
 ?>
-<section class="detail-hero"><div><p class="detail-kicker"><?= e($project['infrastructure_class']) ?></p><h1><?= e($project['title']) ?></h1><p class="detail-meta"><?= e(implode(' · ', array_filter([$project['location'], $project['sector_name'], $project['client']]))) ?></p></div></section>
+<section class="detail-hero"><div><p class="detail-kicker"><?= e(tf($project, 'infrastructure_class')) ?></p><h1><?= e(tf($project, 'title')) ?></h1><p class="detail-meta"><?= e(implode(' · ', array_filter([tf($project, 'location'), tf($project, 'sector_name'), tf($project, 'client')]))) ?></p></div></section>
 <article class="detail-content">
   <?php if ($project['image_path']): ?><img src="<?= e($project['image_path']) ?>" alt=""><?php endif; ?>
   <dl class="detail-facts">
-    <?php foreach (['scale' => 'Scale', 'location' => 'Location', 'sector_name' => 'Sector', 'client' => 'Client / partner'] as $key => $label): if (!$project[$key]) continue; ?><div><dt><?= e($label) ?></dt><dd><?= e($project[$key]) ?></dd></div><?php endforeach; ?>
+    <?php foreach (['scale' => t('project.fact_scale'), 'location' => t('project.fact_location'), 'sector_name' => t('project.fact_sector'), 'client' => t('project.fact_client')] as $key => $label): $factValue = tf($project, $key); if ($factValue === '') continue; ?><div><dt><?= e($label) ?></dt><dd><?= e($factValue) ?></dd></div><?php endforeach; ?>
   </dl>
-  <?php if ($project['summary']): ?><p class="lead"><?= e($project['summary']) ?></p><?php endif; ?>
-  <div><?= $project['body'] ?></div>
+  <?php if (tf($project, 'summary') !== ''): ?><p class="lead"><?= e(tf($project, 'summary')) ?></p><?php endif; ?>
+  <div><?= tf($project, 'body') ?></div>
 </article>
 <?php detail_footer(); ?>
 

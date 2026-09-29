@@ -6,6 +6,7 @@
 .editorial-back { display: inline-block; font-size: .8rem; color: var(--muted); margin-bottom: 3.5rem; }
 .editorial-back:hover, .editorial-link:hover { color: var(--copper-dark); }
 .editorial-kicker, .editorial-section-label { font-size: .69rem; line-height: 1.6; text-transform: uppercase; letter-spacing: .18em; font-weight: 600; color: var(--copper-dark); }
+.editorial-section-label { font-size: .69rem; line-height: 1.6; text-transform: uppercase; letter-spacing: .18em; font-weight: 600; color: var(--copper-dark); }
 .profile-intro { padding: 2.5rem 0 5rem; background: var(--sand); border-bottom: 1px solid var(--line); }
 .profile-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .8fr); align-items: center; gap: clamp(3rem, 7vw, 7rem); }
 .profile-grid--text { grid-template-columns: minmax(0, 850px); }
@@ -17,7 +18,6 @@
 .profile-biography { display: grid; grid-template-columns: 1fr 3fr; gap: 3rem; padding-top: 5rem; padding-bottom: 5rem; }
 .editorial-section-label { padding-top: .45rem; }
 .editorial-prose { font-size: 1.075rem; line-height: 1.85; color: var(--ink-soft); overflow-wrap: anywhere; }
-.profile-biography .editorial-prose { max-width: 68ch; }
 .editorial-prose p { margin: 0 0 1.5em; }
 .editorial-prose h2, .editorial-prose h3, .editorial-prose h4 { color: var(--ink); font-family: 'Playfair Display', Georgia, serif; font-weight: 400; line-height: 1.25; margin: 2em 0 .7em; }
 .editorial-prose h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
@@ -54,10 +54,6 @@
 .editorial-related-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; margin-bottom: 1.5rem; }
 .editorial-related-card h3 { font-size: 1.5rem; line-height: 1.3; margin: .7rem 0 1.5rem; }
 @media (max-width: 760px) {
-  .profile-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .profile-portrait { justify-self: start; max-width: 360px; }
-  .profile-biography { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 3rem; padding-bottom: 3rem; }
-  .profile-intro { padding-bottom: 3rem; }
   .editorial-back { margin-bottom: 2.5rem; }
   .editorial-closing, .related-heading { align-items: start; flex-direction: column; }
   .editorial-related-grid { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -195,3 +191,48 @@
 }
 .detail-page .footer-grid { padding-top: 0; padding-bottom: 0; }
 .sector-emblem svg { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Portrait-led adviser profiles, inspired by an editorial author biography. */
+.adviser-profile { padding-top: 2.25rem; padding-bottom: 5rem; }
+.adviser-profile > .editorial-back { margin-bottom: 2.25rem; }
+.adviser-layout { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 5.5vw, 5rem); align-items: start; }
+.adviser-visual { position: sticky; top: 2rem; min-width: 0; }
+.adviser-portrait { margin: 0; background: var(--sand); overflow: hidden; border-bottom-right-radius: 64px; }
+.adviser-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; }
+.adviser-caption { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.75rem 0; border-bottom: 1px solid var(--line); }
+.adviser-caption > div > p:last-child { font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem; margin-top: .4rem; }
+.adviser-contact { display: inline-flex; align-items: center; gap: 1rem; color: var(--copper-dark); font-size: .8rem; white-space: nowrap; }
+.adviser-contact:hover { color: var(--ink); }
+.adviser-content { min-width: 0; padding-top: .6rem; }
+.adviser-heading h1 { font-size: clamp(2.75rem, 4.7vw, 4.6rem); line-height: 1.08; letter-spacing: -.03em; margin: 1rem 0 1.25rem; overflow-wrap: anywhere; }
+.adviser-role { color: var(--copper-dark); font-size: .95rem; line-height: 1.7; max-width: 40ch; }
+.adviser-summary { color: var(--muted); font-size: 1.1rem; line-height: 1.85; margin-top: 1.75rem; }
+.adviser-biography { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.adviser-biography h2 { display: flex; align-items: center; gap: .9rem; font-size: 1.7rem; line-height: 1.3; margin-bottom: 1.4rem; }
+.adviser-biography h2 > span { display: block; width: 11px; height: 19px; background: var(--copper); clip-path: polygon(0 0,100% 0,100% 100%,50% 75%,0 100%); }
+.adviser-biography .editorial-prose { font-size: 1rem; line-height: 1.9; color: var(--ink-soft); }
+.adviser-next { margin-top: 3rem; padding: 2rem; background: var(--sand); border-top: 1px solid var(--line); }
+.adviser-next h2 { font-size: 2rem; line-height: 1.2; margin: .8rem 0 1rem; }
+.adviser-next > p:not(.editorial-kicker) { color: var(--muted); font-size: .9rem; line-height: 1.8; }
+.adviser-next .editorial-link { margin-top: 1.5rem; }
+.adviser-layout--text { grid-template-columns: minmax(0, 780px); justify-content: center; }
+@media (max-width: 900px) {
+  .adviser-layout { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 2rem; }
+  .adviser-caption { flex-direction: column; align-items: start; gap: 1rem; }
+  .adviser-layout--text { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .adviser-profile { padding-top: 1.75rem; padding-bottom: 3rem; }
+  .adviser-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+  .adviser-visual { position: static; }
+  .adviser-portrait { border-bottom-right-radius: 44px; }
+  .adviser-portrait img { aspect-ratio: 4 / 5; }
+  .adviser-caption { flex-direction: row; align-items: center; }
+  .adviser-caption > div > p:last-child { font-size: 1.05rem; }
+  .adviser-heading h1 { font-size: clamp(2.6rem, 10vw, 3.5rem); }
+  .adviser-biography { margin-top: 2rem; }
+  .adviser-next { padding: 1.5rem; }
+}
+@media (max-height: 740px) and (min-width: 641px) {
+  .adviser-visual { position: static; }
+}

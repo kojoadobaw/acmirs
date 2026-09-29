@@ -25,7 +25,7 @@ detail_header('Newsroom', 'Careers, continental opportunities, bids for partners
         <a href="<?= e(url('newsroom-item.php?slug=' . urlencode($item['slug']))) ?>" class="editorial-link">Read more ↗</a>
       </article>
     <?php endforeach; ?>
-    <?php if (!$items): ?><div class="news-empty"><div><p class="editorial-kicker">Newsroom</p><h2>More to come.</h2></div><div><p>There are no published updates at the moment. Explore our latest perspectives on Africa’s infrastructure, or contact our team.</p><div class="empty-actions"><a class="editorial-link" href="<?= e(url('index.php#insights')) ?>">Explore insights ↗</a><a class="editorial-link" href="<?= e(url('index.php#contact')) ?>">Get in touch ↗</a></div></div></div><?php endif; ?>
+    <?php if (!$items): ?><div class="news-empty"><div><p class="editorial-kicker">Newsroom</p><h2>More to come.</h2></div><div><p>There are no published updates at the moment. Explore our latest perspectives on Africa’s infrastructure, or contact our team.</p><div class="empty-actions"><a class="editorial-link" href="<?= e(url('index.php#insights')) ?>">Explore insights ↗</a><a class="editorial-link" href="<?= e(url('contact.php')) ?>">Get in touch ↗</a></div></div></div><?php endif; ?>
   </div>
 </section>
 <?php detail_footer(); ?>

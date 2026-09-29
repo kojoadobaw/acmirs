@@ -25,7 +25,7 @@ detail_header($member['name'], $member['role'], 'profile-page');
     <?php if ($member['image_path']): ?>
     <aside class="adviser-visual" aria-label="Portrait and contact">
       <figure class="adviser-portrait"><img src="<?= e($member['image_path']) ?>" alt="<?= e($member['name']) ?>" fetchpriority="high"></figure>
-      <div class="adviser-caption"><div><p class="editorial-kicker">ACMIRS</p><p>Infrastructure advisory</p></div><a class="adviser-contact" href="<?= e(url('index.php#contact')) ?>">Get in touch <span aria-hidden="true">↗</span></a></div>
+      <div class="adviser-caption"><div><p class="editorial-kicker">ACMIRS</p><p>Infrastructure advisory</p></div><a class="adviser-contact" href="<?= e(url('contact.php')) ?>">Get in touch <span aria-hidden="true">↗</span></a></div>
     </aside>
     <?php endif; ?>
     <div class="adviser-content">

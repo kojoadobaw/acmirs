@@ -54,4 +54,12 @@ define('DB_NAME', $configValue('DB_NAME'));
 define('DB_USER', $configValue('DB_USER'));
 define('DB_PASS', $configValue('DB_PASS', ''));
 
+define('SMTP_HOST', $configValue('SMTP_HOST', ''));
+define('SMTP_PORT', $configValue('SMTP_PORT', '587'));
+define('SMTP_USER', $configValue('SMTP_USER', ''));
+define('SMTP_PASS', $configValue('SMTP_PASS', ''));
+define('SMTP_ENCRYPTION', $configValue('SMTP_ENCRYPTION', 'tls'));
+define('SMTP_FROM_EMAIL', $configValue('SMTP_FROM_EMAIL', ''));
+define('SMTP_FROM_NAME', $configValue('SMTP_FROM_NAME', 'ACMIRS Website'));
+
 define('PROJECT_ROOT', dirname(__DIR__));

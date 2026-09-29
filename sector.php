@@ -31,5 +31,5 @@ detail_header($sector['name'], $sector['description'], 'sector-page');
     <?php foreach ($relatedServices as $service): ?><li><a href="<?= e(url('index.php#service-' . $service['slug'])) ?>"><?= e($service['label']) ?><span aria-hidden="true">↗</span></a></li><?php endforeach; ?>
   </ul></aside><?php endif; ?>
 </section>
-<section class="editorial-closing container"><div><p class="editorial-kicker">From ambition to delivery</p><h2>Discuss your next project.</h2></div><a class="editorial-link" href="<?= e(url('index.php#contact')) ?>">Start a conversation <span aria-hidden="true">↗</span></a></section>
+<section class="editorial-closing container"><div><p class="editorial-kicker">From ambition to delivery</p><h2>Discuss your next project.</h2></div><a class="editorial-link" href="<?= e(url('contact.php')) ?>">Start a conversation <span aria-hidden="true">↗</span></a></section>
 <?php detail_footer(); ?>

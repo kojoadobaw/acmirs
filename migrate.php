@@ -132,7 +132,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
           INDEX media_created (created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-        $log[] = 'Ensured staff, newsroom, offices, and media tables exist.';
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS inquiries (
+          id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+          category VARCHAR(40) NOT NULL DEFAULT 'general',
+          name VARCHAR(180) NOT NULL,
+          company VARCHAR(180) NULL,
+          email VARCHAR(254) NOT NULL,
+          phone VARCHAR(60) NULL,
+          message TEXT NOT NULL,
+          status ENUM('new', 'read', 'archived') NOT NULL DEFAULT 'new',
+          email_sent TINYINT(1) NOT NULL DEFAULT 0,
+          email_error TEXT NULL,
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          INDEX inquiries_status_created (status, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $log[] = 'Ensured staff, newsroom, offices, media, and inquiries tables exist.';
+
+        if (!column_exists($pdo, 'inquiries', 'email_error')) {
+            $pdo->exec('ALTER TABLE inquiries ADD COLUMN email_error TEXT NULL AFTER email_sent');
+            $log[] = 'Added inquiries.email_error column, to show why an email notification failed.';
+        }
 
         if ((int) $pdo->query('SELECT COUNT(*) FROM offices')->fetchColumn() === 0) {
             $officeStatement = $pdo->prepare('INSERT INTO offices (name, sort_order) VALUES (?, ?)');

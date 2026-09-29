@@ -49,6 +49,14 @@ function admin_header(string $title)
               <a href="<?= e(url('admin/content.php?type=' . $key)) ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
             <a href="<?= e(url('admin/media.php')) ?>">Media Library</a>
+            <?php
+              try {
+                  $newInquiries = (int) db()->query("SELECT COUNT(*) FROM inquiries WHERE status = 'new'")->fetchColumn();
+              } catch (Throwable $exception) {
+                  $newInquiries = 0;
+              }
+            ?>
+            <a href="<?= e(url('admin/inquiries.php')) ?>">Inquiries<?php if ($newInquiries > 0): ?> <span class="nav-badge"><?= $newInquiries ?></span><?php endif; ?></a>
             <a href="<?= e(url('admin/settings.php')) ?>">Section settings</a>
             <a href="<?= e(url('admin/change-password.php')) ?>">Change password</a>
           </aside>

@@ -23,8 +23,8 @@ detail_header('Our Team', 'Meet the ACMIRS leadership and advisory team.', 'peop
       <span class="editorial-link">View profile <span aria-hidden="true">↗</span></span></div>
     </a>
   <?php endforeach; ?>
-  <?php if (!$staff): ?><div class="quiet-empty"><h3>Meet our team soon.</h3><p>Our profiles are being prepared. In the meantime, get in touch to discuss your project.</p><a class="editorial-link" href="<?= e(url('index.php#contact')) ?>">Contact ACMIRS ↗</a></div><?php endif; ?>
+  <?php if (!$staff): ?><div class="quiet-empty"><h3>Meet our team soon.</h3><p>Our profiles are being prepared. In the meantime, get in touch to discuss your project.</p><a class="editorial-link" href="<?= e(url('contact.php')) ?>">Contact ACMIRS ↗</a></div><?php endif; ?>
   </div>
 </section>
-<section class="editorial-closing container"><div><p class="editorial-kicker">Start a conversation</p><h2>Let’s move infrastructure forward.</h2></div><a class="editorial-link" href="<?= e(url('index.php#contact')) ?>">Talk to our team <span aria-hidden="true">↗</span></a></section>
+<section class="editorial-closing container"><div><p class="editorial-kicker">Start a conversation</p><h2>Let’s move infrastructure forward.</h2></div><a class="editorial-link" href="<?= e(url('contact.php')) ?>">Talk to our team <span aria-hidden="true">↗</span></a></section>
 <?php detail_footer(); ?>

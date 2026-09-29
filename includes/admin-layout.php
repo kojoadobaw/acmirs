@@ -16,6 +16,7 @@ function admin_header(string $title)
         'staff' => 'Our Team',
         'newsroom' => 'Newsroom',
         'offices' => 'Offices',
+        'testimonials' => 'Testimonials',
     ];
     ?>
     <!doctype html>

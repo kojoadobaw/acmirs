@@ -19,7 +19,7 @@ if (!$item) {
     exit;
 }
 
-detail_header($item['title'], $item['excerpt']);
+detail_header($item['title'], $item['excerpt'], '', (string) $item['image_path']);
 ?>
 <section class="detail-hero"><div><p class="detail-kicker"><?= e($categoryLabels[$item['category']] ?? ucfirst($item['category'])) ?></p><h1><?= e($item['title']) ?></h1><p class="detail-meta">Published <?= e(date('j F Y', strtotime($item['published_at']))) ?><?php if ($item['closing_date']): ?> · Closes <?= e(date('j F Y', strtotime($item['closing_date']))) ?><?php endif; ?><?php if ($item['location']): ?> · <?= e($item['location']) ?><?php endif; ?></p></div></section>
 <article class="detail-content">

@@ -173,6 +173,20 @@ CREATE TABLE IF NOT EXISTS inquiries (
   INDEX inquiries_status_created (status, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS testimonials (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  quote TEXT NOT NULL,
+  author_name VARCHAR(180) NOT NULL,
+  author_title VARCHAR(180) NULL,
+  company VARCHAR(180) NULL,
+  logo_path VARCHAR(500) NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX testimonials_active_sort (is_active, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS media (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   filename VARCHAR(255) NOT NULL,

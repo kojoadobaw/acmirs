@@ -42,6 +42,11 @@ try {
 } catch (Throwable $exception) {
     $offices = [];
 }
+try {
+    $testimonials = fetch_all('SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order, id');
+} catch (Throwable $exception) {
+    $testimonials = [];
+}
 $linkedinUrl = social_link(setting('social_linkedin'));
 $twitterUrl = social_link(setting('social_twitter'));
 
@@ -72,6 +77,7 @@ $frontMessages = pull_flashes();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="ACMIRS: Global Expertise to Drive Africa Infrastructure Solutions">
   <title>ACMIRS | Infrastructure Advisory</title>
+  <?php render_social_meta('ACMIRS | Infrastructure Advisory', 'ACMIRS: Global Expertise to Drive Africa Infrastructure Solutions', current_url()); ?>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -80,6 +86,7 @@ $frontMessages = pull_flashes();
   <link rel="stylesheet" href="<?= e(asset_url('assets/css/cms-overrides.css')) ?>">
   <link rel="icon" type="image/svg+xml" href="assets/brand/Website/Favicon.svg">
   <link rel="apple-touch-icon" href="assets/brand/Website/Apple-Touch-Icon.svg">
+  <?php render_analytics(); ?>
 </head>
 <body>
   <a href="#top" class="skip-link">Skip to content</a>
@@ -152,10 +159,31 @@ $frontMessages = pull_flashes();
       <div class="insights-cta"><p>Get curated insights delivered to your inbox</p><form class="newsletter-form" method="post"><?= csrf_field() ?><input type="hidden" name="action" value="subscribe"><input type="email" name="email" placeholder="Your email" autocomplete="email" required><button type="submit" class="btn btn-primary">Subscribe</button></form></div>
     </div></section>
 
+    <?php if ($testimonials): ?>
+    <section class="testimonials-section" id="testimonials"><div class="container">
+      <h2 class="section-title"><?= e(setting('testimonials_title', 'What Our Clients Say')) ?></h2>
+      <?php if (setting('testimonials_intro')): ?><p class="section-intro"><?= e(setting('testimonials_intro')) ?></p><?php endif; ?>
+      <div class="testimonials-grid">
+        <?php foreach ($testimonials as $testimonial): ?>
+          <blockquote class="testimonial-card">
+            <?php if ($testimonial['logo_path']): ?><img class="testimonial-logo" src="<?= e($testimonial['logo_path']) ?>" alt="<?= e($testimonial['company']) ?>"><?php endif; ?>
+            <p class="testimonial-quote">&ldquo;<?= e($testimonial['quote']) ?>&rdquo;</p>
+            <footer class="testimonial-author">
+              <strong><?= e($testimonial['author_name']) ?></strong>
+              <?php $role = trim((string) $testimonial['author_title']); $company = trim((string) $testimonial['company']); if ($role !== '' || $company !== ''): ?>
+                <span><?= e(implode(', ', array_filter([$role, $company]))) ?></span>
+              <?php endif; ?>
+            </footer>
+          </blockquote>
+        <?php endforeach; ?>
+      </div>
+    </div></section>
+    <?php endif; ?>
+
     <section class="cta-section"><div class="container"><div class="cta-content"><h2><?= e(setting('cta_title')) ?></h2><p><?= e(setting('cta_body')) ?></p><a href="<?= e(url('contact.php')) ?>" class="btn btn-primary btn-large">Start a Conversation</a></div></div></section>
   </main>
 
-  <footer class="site-footer" id="contact"><div class="container"><div class="footer-grid"><div class="footer-section"><div class="footer-logo"><svg class="logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><image href="assets/brand/Website/Logo-Footer.svg" width="200" height="80"></image></svg></div><p>Global expertise to drive Africa's infrastructure solutions.</p></div><div class="footer-section"><h4>Services</h4><ul><?php foreach (array_slice($services, 0, 6) as $service): ?><li><a href="#services"><?= e($service['label']) ?></a></li><?php endforeach; ?></ul></div><div class="footer-section"><h4>Company</h4><ul><li><a href="<?= e(url('staff.php')) ?>">Our Team</a></li><li><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a></li></ul></div><?php if ($offices): ?><div class="footer-section"><h4>Offices</h4><ul><?php foreach ($offices as $office): ?><li><?= e($office['name']) ?></li><?php endforeach; ?></ul></div><?php endif; ?><div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li><?php if ($linkedinUrl): ?><li><a href="<?= e($linkedinUrl) ?>" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><?php endif; ?><?php if ($twitterUrl): ?><li><a href="<?= e($twitterUrl) ?>" target="_blank" rel="noopener noreferrer">Twitter</a></li><?php endif; ?></ul></div></div><div class="footer-bottom"><p>&copy; <?= date('Y') ?> ACMIRS. All rights reserved.</p><ul class="footer-legal"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Accessibility</a></li></ul></div></div></footer>
+  <footer class="site-footer" id="contact"><div class="container"><div class="footer-grid"><div class="footer-section"><div class="footer-logo"><svg class="logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><image href="assets/brand/Website/Logo-Footer.svg" width="200" height="80"></image></svg></div><p>Global expertise to drive Africa's infrastructure solutions.</p></div><div class="footer-section"><h4>Services</h4><ul><?php foreach (array_slice($services, 0, 6) as $service): ?><li><a href="#services"><?= e($service['label']) ?></a></li><?php endforeach; ?></ul></div><?php if ($sectors): ?><div class="footer-section"><h4>Sectors</h4><ul><?php foreach ($sectors as $sector): ?><li><a href="<?= e(url('sector.php?slug=' . urlencode($sector['slug']))) ?>"><?= e($sector['name']) ?></a></li><?php endforeach; ?></ul></div><?php endif; ?><div class="footer-section"><h4>Company</h4><ul><li><a href="<?= e(url('staff.php')) ?>">Our Team</a></li><li><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a></li></ul></div><?php if ($offices): ?><div class="footer-section"><h4>Offices</h4><ul><?php foreach ($offices as $office): ?><li><?= e($office['name']) ?></li><?php endforeach; ?></ul></div><?php endif; ?><div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li><?php if ($linkedinUrl): ?><li><a href="<?= e($linkedinUrl) ?>" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><?php endif; ?><?php if ($twitterUrl): ?><li><a href="<?= e($twitterUrl) ?>" target="_blank" rel="noopener noreferrer">Twitter</a></li><?php endif; ?></ul></div></div><div class="footer-bottom"><p>&copy; <?= date('Y') ?> ACMIRS. All rights reserved.</p><ul class="footer-legal"><li><a href="<?= e(url('privacy.php')) ?>">Privacy</a></li><li><a href="<?= e(url('terms.php')) ?>">Terms</a></li></ul></div></div></footer>
 
   <script type="application/json" id="service-data"><?= json_encode($serviceData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>

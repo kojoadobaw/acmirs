@@ -25,7 +25,7 @@ function detail_header(string $title, string $description = '', string $pageClas
         <a class="brand" href="<?= e(url()) ?>" aria-label="ACMIRS — home"><img src="<?= e(url('assets/brand/Website/Logo-Footer.svg')) ?>" alt="ACMIRS"></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span class="sr-only">Menu</span></button>
         <nav class="primary-nav" id="primary-nav" data-primary-nav>
-          <a href="<?= e(url('index.php#services')) ?>">Our Services</a><a href="<?= e(url('index.php#sectors')) ?>">Sectors</a><a href="<?= e(url('index.php#experience')) ?>">Experience</a><a href="<?= e(url('staff.php')) ?>">Our Team</a><a href="<?= e(url('index.php#insights')) ?>">Insights</a><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a><a href="<?= e(url('index.php#contact')) ?>">Contact</a><a class="nav-cta" href="<?= e(url('index.php#contact')) ?>">Let's Talk</a>
+          <a href="<?= e(url('index.php#services')) ?>">Our Services</a><a href="<?= e(url('index.php#sectors')) ?>">Sectors</a><a href="<?= e(url('index.php#experience')) ?>">Experience</a><a href="<?= e(url('staff.php')) ?>">Our Team</a><a href="<?= e(url('index.php#insights')) ?>">Insights</a><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a><a href="<?= e(url('contact.php')) ?>">Contact</a><a class="nav-cta" href="<?= e(url('contact.php')) ?>">Let's Talk</a>
         </nav>
       </header>
       <main class="detail-main" id="main-content">

@@ -158,6 +158,20 @@ CREATE TABLE IF NOT EXISTS offices (
   INDEX offices_active_sort (is_active, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS inquiries (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category VARCHAR(40) NOT NULL DEFAULT 'general',
+  name VARCHAR(180) NOT NULL,
+  company VARCHAR(180) NULL,
+  email VARCHAR(254) NOT NULL,
+  phone VARCHAR(60) NULL,
+  message TEXT NOT NULL,
+  status ENUM('new', 'read', 'archived') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX inquiries_status_created (status, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS media (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   filename VARCHAR(255) NOT NULL,

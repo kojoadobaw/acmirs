@@ -18,6 +18,65 @@ function social_link(string $url): string
     return in_array($scheme, ['http', 'https'], true) ? $url : '';
 }
 
+function send_inquiry_email(array $inquiry): bool
+{
+    if (SMTP_HOST === '' || SMTP_FROM_EMAIL === '') {
+        return false;
+    }
+
+    $recipient = setting('contact_email');
+    if ($recipient === '' || !filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+
+    require_once PROJECT_ROOT . '/phpmailer/src/Exception.php';
+    require_once PROJECT_ROOT . '/phpmailer/src/PHPMailer.php';
+    require_once PROJECT_ROOT . '/phpmailer/src/SMTP.php';
+
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->Port = (int) SMTP_PORT;
+        $mail->SMTPAuth = SMTP_USER !== '';
+        if ($mail->SMTPAuth) {
+            $mail->Username = SMTP_USER;
+            $mail->Password = SMTP_PASS;
+        }
+        if (SMTP_ENCRYPTION === 'ssl') {
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } elseif (SMTP_ENCRYPTION === 'tls') {
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        } else {
+            $mail->SMTPAutoTLS = false;
+        }
+
+        $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
+        $mail->addAddress($recipient);
+        if (filter_var($inquiry['email'], FILTER_VALIDATE_EMAIL)) {
+            $mail->addReplyTo($inquiry['email'], (string) $inquiry['name']);
+        }
+
+        $mail->Subject = 'New website inquiry: ' . $inquiry['category_label'];
+        $mail->isHTML(false);
+        $mail->Body = implode("\n", [
+            'Category: ' . $inquiry['category_label'],
+            'Name: ' . $inquiry['name'],
+            'Company: ' . ($inquiry['company'] !== '' ? $inquiry['company'] : '—'),
+            'Email: ' . $inquiry['email'],
+            'Phone: ' . ($inquiry['phone'] !== '' ? $inquiry['phone'] : '—'),
+            '',
+            'Message:',
+            $inquiry['message'],
+        ]);
+
+        $mail->send();
+        return true;
+    } catch (\Throwable $exception) {
+        return false;
+    }
+}
+
 function handle_media_upload(array $file): array
 {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {

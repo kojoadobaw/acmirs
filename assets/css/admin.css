@@ -13,6 +13,7 @@ a { color: inherit; }
 .admin-sidebar { padding: 1.6rem 1rem; background: #fff; border-right: 1px solid var(--line); }
 .admin-sidebar a { display: block; padding: .8rem 1rem; border-radius: 4px; text-decoration: none; font-size: .9rem; }
 .admin-sidebar a:hover { color: var(--copper); background: var(--cream); }
+.nav-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 .3rem; border-radius: 99px; background: var(--copper); color: #fff; font-size: .68rem; font-weight: 700; }
 .admin-main { min-width: 0; padding: clamp(1.5rem, 4vw, 3.5rem); }
 .admin-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; margin-bottom: 2rem; }
 .admin-heading h1 { margin: .25rem 0 .45rem; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 500; }

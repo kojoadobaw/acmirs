@@ -37,6 +37,13 @@ $sectors = fetch_all('SELECT * FROM sectors WHERE is_active = 1 ORDER BY sort_or
 $videos = fetch_all('SELECT * FROM videos WHERE is_active = 1 ORDER BY sort_order, id');
 $projects = fetch_all("SELECT * FROM projects WHERE status = 'published' ORDER BY sort_order, id");
 $insights = fetch_all("SELECT * FROM insights WHERE status = 'published' ORDER BY featured DESC, published_at DESC, id DESC LIMIT 6");
+try {
+    $offices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY sort_order, id');
+} catch (Throwable $exception) {
+    $offices = [];
+}
+$linkedinUrl = social_link(setting('social_linkedin'));
+$twitterUrl = social_link(setting('social_twitter'));
 
 $projectsByClass = [];
 foreach ($projects as $project) {
@@ -68,9 +75,9 @@ $frontMessages = pull_flashes();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/site.css">
-  <link rel="stylesheet" href="assets/css/hero-reveal.css">
-  <link rel="stylesheet" href="assets/css/cms-overrides.css">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/site.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/hero-reveal.css')) ?>">
+  <link rel="stylesheet" href="<?= e(asset_url('assets/css/cms-overrides.css')) ?>">
   <link rel="icon" type="image/svg+xml" href="assets/brand/Website/Favicon.svg">
   <link rel="apple-touch-icon" href="assets/brand/Website/Apple-Touch-Icon.svg">
 </head>
@@ -82,7 +89,7 @@ $frontMessages = pull_flashes();
     <a class="brand" href="#top" aria-label="ACMIRS — home"><img src="assets/brand/Website/Logo-Footer.svg" alt="ACMIRS"></a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span class="sr-only">Menu</span></button>
     <nav class="primary-nav" id="primary-nav" data-primary-nav>
-      <a href="#services">Our Services</a><a href="#sectors">Sectors</a><a href="#experience">Experience</a><a href="../staff.html">Our Team</a><a href="#insights">Insights</a><a href="#contact">Contact</a><a class="nav-cta" href="#contact">Let's Talk</a>
+      <a href="#services">Our Services</a><a href="#sectors">Sectors</a><a href="#experience">Experience</a><a href="<?= e(url('staff.php')) ?>">Our Team</a><a href="#insights">Insights</a><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a><a href="#contact">Contact</a><a class="nav-cta" href="#contact">Let's Talk</a>
     </nav>
   </header>
 
@@ -124,7 +131,7 @@ $frontMessages = pull_flashes();
     </ol></div></div></section>
 
     <section class="sectors-section" id="sectors"><div class="container"><h2 class="section-title"><?= e(setting('sectors_title')) ?></h2><p class="section-intro"><?= e(setting('sectors_intro')) ?></p><div class="sectors-grid">
-      <?php foreach ($sectors as $sector): ?><div class="sector-card"><span class="sector-icon"><?= icon_svg($sector['icon']) ?></span><h3><?= e($sector['name']) ?></h3><p><?= e($sector['description']) ?></p></div><?php endforeach; ?>
+      <?php foreach ($sectors as $sector): ?><a class="sector-card" href="sector.php?slug=<?= urlencode($sector['slug']) ?>"><span class="sector-icon"><?= icon_svg($sector['icon']) ?></span><h3><?= e($sector['name']) ?></h3><p><?= e($sector['description']) ?></p></a><?php endforeach; ?>
     </div></div></section>
 
     <section class="video-section"><div class="container"><h2 class="section-title"><?= e(setting('videos_title')) ?></h2><div class="video-grid">
@@ -148,12 +155,12 @@ $frontMessages = pull_flashes();
     <section class="cta-section"><div class="container"><div class="cta-content"><h2><?= e(setting('cta_title')) ?></h2><p><?= e(setting('cta_body')) ?></p><a href="#contact" class="btn btn-primary btn-large">Start a Conversation</a></div></div></section>
   </main>
 
-  <footer class="site-footer" id="contact"><div class="container"><div class="footer-grid"><div class="footer-section"><div class="footer-logo"><svg class="logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><image href="assets/brand/Website/Logo-Footer.svg" width="200" height="80"></image></svg></div><p>Global expertise to drive Africa's infrastructure solutions.</p></div><div class="footer-section"><h4>Services</h4><ul><?php foreach (array_slice($services, 0, 6) as $service): ?><li><a href="#services"><?= e($service['label']) ?></a></li><?php endforeach; ?></ul></div><div class="footer-section"><h4>Offices</h4><ul><li>New York</li><li>London</li><li>Beijing</li><li>Cape Town</li></ul></div><div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Twitter</a></li></ul></div></div><div class="footer-bottom"><p>&copy; <?= date('Y') ?> ACMIRS. All rights reserved.</p><ul class="footer-legal"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Accessibility</a></li></ul></div></div></footer>
+  <footer class="site-footer" id="contact"><div class="container"><div class="footer-grid"><div class="footer-section"><div class="footer-logo"><svg class="logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><image href="assets/brand/Website/Logo-Footer.svg" width="200" height="80"></image></svg></div><p>Global expertise to drive Africa's infrastructure solutions.</p></div><div class="footer-section"><h4>Services</h4><ul><?php foreach (array_slice($services, 0, 6) as $service): ?><li><a href="#services"><?= e($service['label']) ?></a></li><?php endforeach; ?></ul></div><div class="footer-section"><h4>Company</h4><ul><li><a href="<?= e(url('staff.php')) ?>">Our Team</a></li><li><a href="<?= e(url('newsroom.php')) ?>">Newsroom</a></li></ul></div><?php if ($offices): ?><div class="footer-section"><h4>Offices</h4><ul><?php foreach ($offices as $office): ?><li><?= e($office['name']) ?></li><?php endforeach; ?></ul></div><?php endif; ?><div class="footer-section"><h4>Connect</h4><ul><li><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a></li><li><a href="tel:<?= e(preg_replace('/[^+0-9]/', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a></li><?php if ($linkedinUrl): ?><li><a href="<?= e($linkedinUrl) ?>" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><?php endif; ?><?php if ($twitterUrl): ?><li><a href="<?= e($twitterUrl) ?>" target="_blank" rel="noopener noreferrer">Twitter</a></li><?php endif; ?></ul></div></div><div class="footer-bottom"><p>&copy; <?= date('Y') ?> ACMIRS. All rights reserved.</p><ul class="footer-legal"><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Accessibility</a></li></ul></div></div></footer>
 
   <script type="application/json" id="service-data"><?= json_encode($serviceData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="assets/js/hero-reveal.js"></script>
-  <script src="assets/js/app.js"></script>
+  <script src="<?= e(asset_url('assets/js/app.js')) ?>"></script>
 </body>
 </html>

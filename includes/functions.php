@@ -8,6 +8,61 @@ function e($value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function social_link(string $url): string
+{
+    $url = trim($url);
+    if ($url === '') {
+        return '';
+    }
+    $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+    return in_array($scheme, ['http', 'https'], true) ? $url : '';
+}
+
+function handle_media_upload(array $file): array
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('The file could not be uploaded.');
+    }
+    if ((int) $file['size'] > 5 * 1024 * 1024) {
+        throw new RuntimeException('Images must be 5MB or smaller.');
+    }
+
+    $info = @getimagesize($file['tmp_name']);
+    if ($info === false) {
+        throw new RuntimeException('That file is not a valid image.');
+    }
+
+    $allowedTypes = [
+        IMAGETYPE_JPEG => 'jpg',
+        IMAGETYPE_PNG => 'png',
+        IMAGETYPE_GIF => 'gif',
+        IMAGETYPE_WEBP => 'webp',
+    ];
+    if (!isset($allowedTypes[$info[2]])) {
+        throw new RuntimeException('Only JPEG, PNG, GIF, and WebP images are supported.');
+    }
+
+    $filename = bin2hex(random_bytes(12)) . '.' . $allowedTypes[$info[2]];
+    $destination = PROJECT_ROOT . '/uploads/' . $filename;
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new RuntimeException('The file could not be saved.');
+    }
+
+    $statement = db()->prepare(
+        'INSERT INTO media (filename, original_name, mime_type, size, width, height) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    $statement->execute([
+        $filename,
+        basename((string) $file['name']),
+        (string) $info['mime'],
+        (int) $file['size'],
+        (int) $info[0],
+        (int) $info[1],
+    ]);
+
+    return ['id' => (int) db()->lastInsertId(), 'path' => 'uploads/' . $filename];
+}
+
 function sanitize_html(string $html): string
 {
     $html = trim($html);
@@ -119,6 +174,13 @@ function url(string $path = ''): string
     return app_base_url() . '/' . ltrim($path, '/');
 }
 
+// Content fingerprints keep cached styles in step with deployed templates.
+function asset_url(string $path): string
+{
+    $file = dirname(__DIR__) . '/' . ltrim($path, '/');
+    return url($path) . '?v=' . (is_file($file) ? substr(hash_file('sha256', $file), 0, 12) : '1');
+}
+
 function redirect(string $path)
 {
     header('Location: ' . (strpos($path, 'http') === 0 ? $path : url($path)));
@@ -228,6 +290,7 @@ function icon_svg(string $key): string
         'digital' => '<circle cx="16" cy="22" r="2.5"/><path d="M10.5 17.5a8 8 0 0 1 11 0M6 13a14 14 0 0 1 20 0"/>',
         'agriculture' => '<path d="M16 29V13"/><path d="M16 17c0-5 4-9 9-9 0 5-4 9-9 9zM16 22c0-5-4-9-9-9 0 5 4 9 9 9z"/><path d="M6 29h20"/>',
         'oil-gas' => '<path d="M6 29V11l8-5 8 5v18"/><path d="M22 16h4v13M2 29h28"/><path d="M11 15h6M11 21h6"/>',
+        'aviation' => '<path d="M16 3v11l12 7v3l-12-4-12 4v-3l12-7z"/><path d="M13 24l-2 5h10l-2-5z"/>',
     ];
     $body = $icons[$key] ?? '<circle cx="16" cy="16" r="11"/><path d="M16 9v14M9 16h14"/>';
     return '<svg viewBox="0 0 32 32" aria-hidden="true">' . $body . '</svg>';

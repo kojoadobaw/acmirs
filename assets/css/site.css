@@ -1596,6 +1596,11 @@ img { max-width: 100%; }
   line-height: 1.4;
   color: var(--ink-soft);
   border-radius: 2px;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+a.chip:hover {
+  border-color: var(--copper);
+  color: var(--copper);
 }
 
 /* Sectors section */

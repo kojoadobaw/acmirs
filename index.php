@@ -9,10 +9,10 @@ try {
     redirect('install.php');
 }
 
-$sectorRows = fetch_all('SELECT ss.service_id, s.name, s.name_fr, s.name_es FROM service_sectors ss JOIN sectors s ON s.id = ss.sector_id WHERE s.is_active = 1 ORDER BY s.sort_order, s.name');
+$sectorRows = fetch_all('SELECT ss.service_id, s.name, s.name_fr, s.name_es, s.slug FROM service_sectors ss JOIN sectors s ON s.id = ss.sector_id WHERE s.is_active = 1 ORDER BY s.sort_order, s.name');
 $serviceSectors = [];
 foreach ($sectorRows as $row) {
-    $serviceSectors[(int) $row['service_id']][] = tf($row, 'name');
+    $serviceSectors[(int) $row['service_id']][] = ['name' => tf($row, 'name'), 'url' => url('sector.php?slug=' . urlencode($row['slug']))];
 }
 
 $serviceData = [];

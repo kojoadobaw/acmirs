@@ -77,9 +77,10 @@
       });
       sectorsEl.innerHTML = "";
       mandate.sectors.forEach(function (sector) {
-        var chip = document.createElement("span");
+        var chip = document.createElement("a");
         chip.className = "chip";
-        chip.textContent = sector;
+        chip.textContent = sector.name;
+        chip.href = sector.url;
         sectorsEl.appendChild(chip);
       });
     }

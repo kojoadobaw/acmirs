@@ -163,6 +163,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
         $log[] = 'Ensured staff, newsroom, offices, media, inquiries, and testimonials tables exist.';
 
+        // --- Schema: French and Spanish translation columns for CMS content ---
+        $translatableColumns = [
+            'services' => ['label' => 'VARCHAR(180)', 'title' => 'VARCHAR(180)', 'blurb' => 'TEXT', 'items_json' => 'LONGTEXT', 'challenge' => 'TEXT', 'response' => 'TEXT', 'outcome' => 'TEXT'],
+            'sectors' => ['name' => 'VARCHAR(180)', 'description' => 'TEXT', 'body' => 'MEDIUMTEXT'],
+            'projects' => ['title' => 'VARCHAR(240)', 'infrastructure_class' => 'VARCHAR(160)', 'scale' => 'VARCHAR(120)', 'location' => 'VARCHAR(180)', 'sector_name' => 'VARCHAR(180)', 'client' => 'VARCHAR(240)', 'summary' => 'TEXT', 'body' => 'MEDIUMTEXT'],
+            'insights' => ['title' => 'VARCHAR(240)', 'category' => 'VARCHAR(100)', 'excerpt' => 'TEXT', 'body' => 'MEDIUMTEXT', 'link_label' => 'VARCHAR(80)'],
+            'staff' => ['role' => 'VARCHAR(180)', 'short_bio' => 'TEXT', 'bio' => 'MEDIUMTEXT'],
+            'newsroom' => ['title' => 'VARCHAR(240)', 'excerpt' => 'TEXT', 'body' => 'MEDIUMTEXT', 'location' => 'VARCHAR(180)'],
+            'testimonials' => ['quote' => 'TEXT', 'author_title' => 'VARCHAR(180)'],
+            'mandates' => ['custom_label' => 'VARCHAR(180)'],
+            'videos' => ['title' => 'VARCHAR(220)', 'description' => 'TEXT'],
+        ];
+        $translatedColumnCount = 0;
+        foreach ($translatableColumns as $table => $columns) {
+            foreach ($columns as $column => $columnType) {
+                foreach (['fr', 'es'] as $localeSuffix) {
+                    $localizedColumn = $column . '_' . $localeSuffix;
+                    if (!column_exists($pdo, $table, $localizedColumn)) {
+                        $pdo->exec('ALTER TABLE `' . $table . '` ADD COLUMN `' . $localizedColumn . '` ' . $columnType . ' NULL AFTER `' . $column . '`');
+                        $translatedColumnCount++;
+                    }
+                }
+            }
+        }
+        if ($translatedColumnCount > 0) {
+            $log[] = 'Added ' . $translatedColumnCount . ' French/Spanish translation column(s) across services, sectors, projects, insights, staff, newsroom, and testimonials.';
+        }
+
         if (!column_exists($pdo, 'inquiries', 'email_error')) {
             $pdo->exec('ALTER TABLE inquiries ADD COLUMN email_error TEXT NULL AFTER email_sent');
             $log[] = 'Added inquiries.email_error column, to show why an email notification failed.';

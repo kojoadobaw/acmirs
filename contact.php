@@ -5,10 +5,10 @@ require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/detail-header.php';
 
 $categories = [
-    'general' => 'General Inquiry',
-    'partnership' => 'Partnership',
-    'careers' => 'Careers',
-    'media' => 'Media & Press',
+    'general' => t('contact.category.general'),
+    'partnership' => t('contact.category.partnership'),
+    'careers' => t('contact.category.careers'),
+    'media' => t('contact.category.media'),
 ];
 
 $error = '';
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $validEmail = filter_var($values['email'], FILTER_VALIDATE_EMAIL);
 
         if ($values['name'] === '' || !$validEmail || $values['message'] === '') {
-            $error = 'Please fill in your name, a valid email address, and your message.';
+            $error = t('contact.error_required');
         } else {
             $statement = db()->prepare(
                 'INSERT INTO inquiries (category, name, company, email, phone, message) VALUES (?, ?, ?, ?, ?, ?)'
@@ -66,19 +66,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-detail_header('Contact', 'Start a conversation with the ACMIRS team.', 'contact-page');
+detail_header(t('contact.meta_title'), t('contact.meta_description'), 'contact-page');
 ?>
 <section class="collection-hero"><div class="container collection-hero-grid">
-  <div><p class="editorial-kicker">Get in touch</p><h1>Let's talk<br><em>infrastructure.</em></h1></div>
-  <div class="collection-intro"><span class="intro-rule" aria-hidden="true"></span><p>Tell us what you're working on.</p><p class="collection-description">Whether it's a project, a partnership, a career move or a press inquiry — we'll route it to the right person.</p></div>
+  <div><p class="editorial-kicker"><?= e(t('contact.kicker')) ?></p><h1><?= e(t('contact.title_line1')) ?><br><em><?= e(t('contact.title_em')) ?></em></h1></div>
+  <div class="collection-intro"><span class="intro-rule" aria-hidden="true"></span><p><?= e(t('contact.intro1')) ?></p><p class="collection-description"><?= e(t('contact.intro2')) ?></p></div>
 </div></section>
 
 <section class="contact-section container">
   <?php if ($success): ?>
     <div class="contact-success">
-      <p class="editorial-kicker">Message sent</p>
-      <h2>Thank you — we'll be in touch.</h2>
-      <p>A member of the ACMIRS team will follow up shortly. In the meantime, explore our <a href="<?= e(url('index.php#experience')) ?>">experience across Africa</a>.</p>
+      <p class="editorial-kicker"><?= e(t('contact.success_kicker')) ?></p>
+      <h2><?= e(t('contact.success_title')) ?></h2>
+      <p><?= e(t('contact.success_before')) ?> <a href="<?= e(url('index.php#experience')) ?>"><?= e(t('contact.success_link')) ?></a>.</p>
     </div>
   <?php else: ?>
     <?php if ($error): ?><div class="public-message public-message--error"><?= e($error) ?></div><?php endif; ?>
@@ -86,8 +86,8 @@ detail_header('Contact', 'Start a conversation with the ACMIRS team.', 'contact-
       <?= csrf_field() ?>
       <input type="text" name="website" value="" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true">
 
-      <fieldset class="form-step" data-step data-step-label="What can we help with?">
-        <legend>What can we help with?</legend>
+      <fieldset class="form-step" data-step data-step-label="<?= e(t('contact.step1_legend')) ?>">
+        <legend><?= e(t('contact.step1_legend')) ?></legend>
         <div class="category-grid">
           <?php foreach ($categories as $key => $label): ?>
             <label class="category-card">
@@ -98,20 +98,20 @@ detail_header('Contact', 'Start a conversation with the ACMIRS team.', 'contact-
         </div>
       </fieldset>
 
-      <fieldset class="form-step" data-step data-step-label="Your details">
-        <legend>Your details</legend>
-        <label>Full name<input type="text" name="name" value="<?= e($values['name']) ?>" required></label>
-        <label>Company / organisation<input type="text" name="company" value="<?= e($values['company']) ?>"></label>
-        <label>Email<input type="email" name="email" value="<?= e($values['email']) ?>" required></label>
-        <label>Phone<input type="tel" name="phone" value="<?= e($values['phone']) ?>"></label>
+      <fieldset class="form-step" data-step data-step-label="<?= e(t('contact.step2_legend')) ?>">
+        <legend><?= e(t('contact.step2_legend')) ?></legend>
+        <label><?= e(t('contact.field_name')) ?><input type="text" name="name" value="<?= e($values['name']) ?>" required></label>
+        <label><?= e(t('contact.field_company')) ?><input type="text" name="company" value="<?= e($values['company']) ?>"></label>
+        <label><?= e(t('contact.field_email')) ?><input type="email" name="email" value="<?= e($values['email']) ?>" required></label>
+        <label><?= e(t('contact.field_phone')) ?><input type="tel" name="phone" value="<?= e($values['phone']) ?>"></label>
       </fieldset>
 
-      <fieldset class="form-step" data-step data-step-label="Your message">
-        <legend>Your message</legend>
-        <label>Tell us more<textarea name="message" rows="6" required><?= e($values['message']) ?></textarea></label>
+      <fieldset class="form-step" data-step data-step-label="<?= e(t('contact.step3_legend')) ?>">
+        <legend><?= e(t('contact.step3_legend')) ?></legend>
+        <label><?= e(t('contact.field_message')) ?><textarea name="message" rows="6" required><?= e($values['message']) ?></textarea></label>
       </fieldset>
 
-      <button type="submit" class="btn btn--copper btn-large">Send message</button>
+      <button type="submit" class="btn btn--copper btn-large"><?= e(t('contact.submit')) ?></button>
     </form>
   <?php endif; ?>
 </section>

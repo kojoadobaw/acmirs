@@ -339,7 +339,7 @@ function render_social_meta(string $title, string $description, string $url, str
 {
     $resolvedImage = $image !== ''
         ? (preg_match('~^https?://~i', $image) ? $image : absolute_url($image))
-        : absolute_url('assets/img/hero-golden-hour.jpg');
+        : '';
     ?>
     <link rel="canonical" href="<?= e($url) ?>">
     <meta property="og:type" content="website">
@@ -347,11 +347,11 @@ function render_social_meta(string $title, string $description, string $url, str
     <meta property="og:title" content="<?= e($title) ?>">
     <meta property="og:description" content="<?= e($description) ?>">
     <meta property="og:url" content="<?= e($url) ?>">
-    <meta property="og:image" content="<?= e($resolvedImage) ?>">
+    <?php if ($resolvedImage !== ''): ?><meta property="og:image" content="<?= e($resolvedImage) ?>"><?php endif; ?>
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= e($title) ?>">
     <meta name="twitter:description" content="<?= e($description) ?>">
-    <meta name="twitter:image" content="<?= e($resolvedImage) ?>">
+    <?php if ($resolvedImage !== ''): ?><meta name="twitter:image" content="<?= e($resolvedImage) ?>"><?php endif; ?>
     <?php
 }
 

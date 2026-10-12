@@ -81,6 +81,8 @@ $heroDescription = 'ACMIRS: Global Expertise to Drive Africa Infrastructure Solu
   <title>ACMIRS | Infrastructure Advisory</title>
   <?php render_social_meta('ACMIRS | Infrastructure Advisory', $heroDescription, current_url()); ?>
   <?php render_hreflang(); ?>
+  <link rel="preload" as="video" href="assets/img/hero-1280.mp4" type="video/mp4" fetchpriority="high">
+  <link rel="preload" as="video" href="assets/img/hero.mp4" type="video/mp4" media="(min-width: 1200px)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">

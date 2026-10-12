@@ -1721,18 +1721,25 @@ a.chip:hover {
   padding: 0;
 }
 
-/* Fixed scale column: every mandate name lands on the same axis whether or
-   not a hard figure exists. A row without a number leaves the cell empty
-   rather than filling it with a word pretending to be a metric. */
+/* Most mandates are advisory engagements with no hard figure to report, so
+   the scale (when a project has one) is an inline badge before the name
+   rather than a reserved column — a row without a number takes up no more
+   space than its name and meta line need. */
 .exp-row {
-  display: grid;
-  grid-template-columns: 148px 1fr;
-  gap: 28px;
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   padding: 20px 0;
   border-bottom: 1px solid var(--line-2);
 }
 .exp-row:last-child { border-bottom: 0; }
+
+.exp-detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 14px;
+}
 
 .exp-scale {
   font-family: "Playfair Display", Georgia, serif;
@@ -1740,12 +1747,7 @@ a.chip:hover {
   line-height: 1.2;
   color: var(--copper);
   font-variant-numeric: tabular-nums;
-}
-
-.exp-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex: none;
 }
 
 .exp-name {
@@ -1759,11 +1761,6 @@ a.chip:hover {
   line-height: 1.5;
   letter-spacing: 0.04em;
   color: var(--muted);
-}
-
-@media (max-width: 640px) {
-  .exp-row { grid-template-columns: 1fr; gap: 6px; }
-  .exp-scale:empty { display: none; }
 }
 
 /* Delivery model section */

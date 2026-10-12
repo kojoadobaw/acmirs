@@ -8,7 +8,7 @@ function e($value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-const SUPPORTED_LOCALES = ['en' => 'English', 'fr' => 'Français', 'es' => 'Español'];
+const SUPPORTED_LOCALES = ['en' => 'English', 'fr' => 'Français', 'es' => 'Español', 'pt' => 'Português'];
 
 function current_locale(): string
 {

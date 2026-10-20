@@ -235,7 +235,7 @@
   .adviser-layout { grid-template-columns: 1fr; gap: 2.5rem; }
   .adviser-visual { position: static; }
   .adviser-portrait { border-bottom-right-radius: 44px; }
-  .adviser-portrait img { aspect-ratio: 4 / 5; }
+  .adviser-portrait img { aspect-ratio: 1 / 1; }
   .adviser-caption { flex-direction: row; align-items: center; }
   .adviser-caption > div > p:last-child { font-size: 1.05rem; }
   .adviser-heading h1 { font-size: clamp(2.6rem, 10vw, 3.5rem); }

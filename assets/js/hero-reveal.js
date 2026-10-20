@@ -60,7 +60,8 @@
         end: "+=300%",
         scrub: 0.5,
         pin: true,
-        anticipatePin: 1
+        anticipatePin: 1,
+        invalidateOnRefresh: true
       }
     });
 
@@ -90,6 +91,16 @@
       // Phase 6 (4.75–5.2): the CTA buttons land last, then the hero unpins.
       .to(actions, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power1.out" }, 4.75);
 
+    // The pin's scroll distance is calculated from the hero's rendered
+    // height at that moment. Headline/dossier text renders in a fallback
+    // font first (the Google Fonts <link> uses display=swap), so if the
+    // swap reflows the hero after ScrollTrigger's first measurement, the
+    // pin spacer goes stale and leaves a gap before the next section once
+    // unpinned. Refresh once fonts are actually ready, not just on load
+    // (which large hero videos can delay well past the font swap anyway).
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+    }
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   }
 

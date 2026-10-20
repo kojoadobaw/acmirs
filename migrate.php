@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
         $log[] = 'Ensured staff, newsroom, offices, media, inquiries, and testimonials tables exist.';
 
-        // --- Schema: French and Spanish translation columns for CMS content ---
+        // --- Schema: French, Spanish, and Portuguese translation columns for CMS content ---
         $translatableColumns = [
             'services' => ['label' => 'VARCHAR(180)', 'title' => 'VARCHAR(180)', 'blurb' => 'TEXT', 'items_json' => 'LONGTEXT', 'challenge' => 'TEXT', 'response' => 'TEXT', 'outcome' => 'TEXT'],
             'sectors' => ['name' => 'VARCHAR(180)', 'description' => 'TEXT', 'body' => 'MEDIUMTEXT'],
@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $translatedColumnCount = 0;
         foreach ($translatableColumns as $table => $columns) {
             foreach ($columns as $column => $columnType) {
-                foreach (['fr', 'es'] as $localeSuffix) {
+                foreach (['fr', 'es', 'pt'] as $localeSuffix) {
                     $localizedColumn = $column . '_' . $localeSuffix;
                     if (!column_exists($pdo, $table, $localizedColumn)) {
                         $pdo->exec('ALTER TABLE `' . $table . '` ADD COLUMN `' . $localizedColumn . '` ' . $columnType . ' NULL AFTER `' . $column . '`');
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         if ($translatedColumnCount > 0) {
-            $log[] = 'Added ' . $translatedColumnCount . ' French/Spanish translation column(s) across services, sectors, projects, insights, staff, newsroom, and testimonials.';
+            $log[] = 'Added ' . $translatedColumnCount . ' French/Spanish/Portuguese translation column(s) across services, sectors, projects, insights, staff, newsroom, testimonials, mandates, and videos.';
         }
 
         if (!column_exists($pdo, 'inquiries', 'email_error')) {
@@ -202,6 +202,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $officeStatement->execute([$office, ($index + 1) * 10]);
             }
             $log[] = 'Seeded the existing New York/London/Beijing/Cape Town offices.';
+        }
+
+        if ((int) $pdo->query("SELECT COUNT(*) FROM offices WHERE name = 'Kampala'")->fetchColumn() === 0) {
+            $maxOfficeSort = (int) $pdo->query('SELECT COALESCE(MAX(sort_order), 0) FROM offices')->fetchColumn();
+            $pdo->prepare('INSERT INTO offices (name, sort_order) VALUES (?, ?)')->execute(['Kampala', $maxOfficeSort + 10]);
+            $log[] = 'Added "Kampala" as an additional office location.';
         }
 
         // --- Content: rename "Digital Infrastructure" sector, add "Aviation & Aerospace Advisory" ---

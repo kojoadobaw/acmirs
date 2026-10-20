@@ -4,8 +4,14 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/includes/admin-layout.php';
 require_admin();
 
-// Base (English) copy fields. Each one listed here also gets _fr/_es variants
-// generated below, so translations are entered right next to the English text.
+// Suffix => label used to generate a translated field next to each base
+// (English) field below. Add a locale here (matching SUPPORTED_LOCALES in
+// includes/functions.php) to grow the set of translatable fields.
+$translationSuffixes = ['fr' => 'French', 'es' => 'Spanish', 'pt' => 'Portuguese'];
+
+// Base (English) copy fields. Each one listed here also gets a translated
+// variant per $translationSuffixes, generated below, so translations are
+// entered right next to the English text.
 $translatableFields = [
     'services_title' => 'Services heading', 'services_intro' => 'Services introduction',
     'sectors_title' => 'Sectors heading', 'sectors_intro' => 'Sectors introduction',
@@ -34,18 +40,19 @@ $richtextBaseFields = ['privacy_policy' => 'Privacy policy', 'terms_of_service' 
 $fields = [];
 foreach ($translatableFields as $key => $label) {
     $fields[$key] = $label;
-    $fields[$key . '_fr'] = $label . ' (French)';
-    $fields[$key . '_es'] = $label . ' (Spanish)';
+    foreach ($translationSuffixes as $suffix => $language) {
+        $fields[$key . '_' . $suffix] = $label . ' (' . $language . ')';
+    }
 }
 $fields += $untranslatedFields;
 $richtextFields = [];
 foreach ($richtextBaseFields as $key => $label) {
     $fields[$key] = $label;
-    $fields[$key . '_fr'] = $label . ' (French)';
-    $fields[$key . '_es'] = $label . ' (Spanish)';
     $richtextFields[] = $key;
-    $richtextFields[] = $key . '_fr';
-    $richtextFields[] = $key . '_es';
+    foreach ($translationSuffixes as $suffix => $language) {
+        $fields[$key . '_' . $suffix] = $label . ' (' . $language . ')';
+        $richtextFields[] = $key . '_' . $suffix;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

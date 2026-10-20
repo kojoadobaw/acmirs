@@ -39,7 +39,7 @@ $videos = fetch_all('SELECT * FROM videos WHERE is_active = 1 ORDER BY sort_orde
 $projects = fetch_all("SELECT * FROM projects WHERE status = 'published' ORDER BY sort_order, id");
 $insights = fetch_all("SELECT * FROM insights WHERE status = 'published' ORDER BY featured DESC, published_at DESC, id DESC LIMIT 6");
 try {
-    $offices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY sort_order, id');
+    $offices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY name');
 } catch (Throwable $exception) {
     $offices = [];
 }
@@ -81,6 +81,8 @@ $heroDescription = 'ACMIRS: Global Expertise to Drive Africa Infrastructure Solu
   <title>ACMIRS | Infrastructure Advisory</title>
   <?php render_social_meta('ACMIRS | Infrastructure Advisory', $heroDescription, current_url()); ?>
   <?php render_hreflang(); ?>
+  <link rel="preload" as="video" href="assets/img/hero-1280.mp4" type="video/mp4" fetchpriority="high">
+  <link rel="preload" as="video" href="assets/img/hero.mp4" type="video/mp4" media="(min-width: 1200px)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -105,7 +107,7 @@ $heroDescription = 'ACMIRS: Global Expertise to Drive Africa Infrastructure Solu
 
   <main>
     <section class="hero" id="top">
-      <div class="hero-media" data-hero-media aria-hidden="true"><video autoplay muted playsinline preload="metadata" data-hero-video data-src-hd="assets/img/hero.mp4" data-hero-playlist="assets/img/hero_energy.mp4,assets/img/hero_telecoms.mp4,assets/img/hero-golden-hour.mp4"><source src="assets/img/hero-1280.mp4" type="video/mp4"></video></div>
+      <div class="hero-media" data-hero-media aria-hidden="true"><video autoplay muted playsinline preload="metadata" data-hero-video data-src-hd="assets/img/hero.mp4" data-hero-playlist="assets/img/hero_next.mp4,assets/img/hero_energy.mp4,assets/img/hero_telecoms.mp4,assets/img/hero-golden-hour.mp4"><source src="assets/img/hero-1280.mp4" type="video/mp4"></video></div>
       <div class="hero-mask" data-hero-mask aria-hidden="true"><video data-hero-mask-video muted loop playsinline preload="none"><source src="assets/img/hero-1280.mp4" type="video/mp4"></video></div>
       <div class="hero-wash hero-wash--side" data-hero-wash aria-hidden="true"></div><div class="hero-wash hero-wash--vertical" data-hero-wash aria-hidden="true"></div>
       <div class="hero-inner">
@@ -149,7 +151,7 @@ $heroDescription = 'ACMIRS: Global Expertise to Drive Africa Infrastructure Solu
     </div></div></section>
 
     <section class="experience-section" id="experience"><div class="container"><h2 class="section-title"><?= e(setting_t('experience_title')) ?></h2><p class="section-intro"><?= e(setting_t('experience_intro')) ?></p>
-      <?php foreach ($projectsByClass as $class => $classProjects): ?><div class="exp-tier"><h3 class="exp-tier-title"><?= e($class) ?></h3><ul class="exp-list"><?php foreach ($classProjects as $project): $meta = implode(' · ', array_filter([tf($project, 'location'), tf($project, 'sector_name'), tf($project, 'client')])); ?><li class="exp-row"><span class="exp-scale"><?= e(tf($project, 'scale')) ?></span><span class="exp-detail"><a class="exp-name" href="project.php?slug=<?= urlencode($project['slug']) ?>"><?= e(tf($project, 'title')) ?></a><span class="exp-meta"><?= e($meta) ?></span></span></li><?php endforeach; ?></ul></div><?php endforeach; ?>
+      <?php foreach ($projectsByClass as $class => $classProjects): ?><div class="exp-tier"><h3 class="exp-tier-title"><?= e($class) ?></h3><ul class="exp-list"><?php foreach ($classProjects as $project): $scale = tf($project, 'scale'); $meta = implode(' · ', array_filter([tf($project, 'location'), tf($project, 'sector_name'), tf($project, 'client')])); ?><li class="exp-row"><span class="exp-detail"><?php if ($scale !== ''): ?><span class="exp-scale"><?= e($scale) ?></span><?php endif; ?><a class="exp-name" href="project.php?slug=<?= urlencode($project['slug']) ?>"><?= e(tf($project, 'title')) ?></a></span><span class="exp-meta"><?= e($meta) ?></span></li><?php endforeach; ?></ul></div><?php endforeach; ?>
     </div></section>
 
     <section class="delivery-model" id="delivery-model"><div class="container"><h2 class="section-title"><?= e(setting_t('delivery_title')) ?></h2><p class="section-intro"><?= e(setting_t('delivery_intro')) ?></p><div class="model-grid">

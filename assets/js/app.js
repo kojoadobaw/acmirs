@@ -170,11 +170,28 @@
     if (extra.length) {
       var playlist = [useHd ? hd : video.currentSrc || video.querySelector("source").src].concat(extra);
       var index = 0;
+
+      // Buffer the next clip in the background while the current one is
+      // still playing, so the swap on "ended" is instant instead of
+      // starting a fresh download. Kept off metered/slow connections.
+      var warmed = {};
+      function warm(src) {
+        if (!src || warmed[src] || thrifty()) return;
+        var preloadVideo = document.createElement("video");
+        preloadVideo.preload = "auto";
+        preloadVideo.muted = true;
+        preloadVideo.src = src;
+        preloadVideo.load();
+        warmed[src] = preloadVideo;
+      }
+      warm(playlist[(index + 1) % playlist.length]);
+
       video.addEventListener("ended", function () {
         index = (index + 1) % playlist.length;
         video.src = playlist[index];
         video.load();
         video.addEventListener("canplay", play, { once: true });
+        warm(playlist[(index + 1) % playlist.length]);
       });
     }
 

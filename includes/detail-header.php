@@ -40,7 +40,7 @@ function detail_footer()
     $footerServices = fetch_all('SELECT label, label_fr, label_es FROM services WHERE is_active = 1 ORDER BY sort_order LIMIT 6');
     $footerSectors = fetch_all('SELECT name, name_fr, name_es, slug FROM sectors WHERE is_active = 1 ORDER BY sort_order, id');
     try {
-        $footerOffices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY sort_order, id');
+        $footerOffices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY name');
     } catch (Throwable $exception) {
         $footerOffices = [];
     }

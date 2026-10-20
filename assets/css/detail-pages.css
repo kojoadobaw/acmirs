@@ -77,7 +77,7 @@
 .detail-page .footer-section h4 { margin-top: 0; }
 .detail-page .footer-logo { height: auto; margin-bottom: 1.25rem; }
 .detail-page .footer-logo .logo { width: 150px; height: 60px; }
-.detail-page .footer-section li { font-size: .8rem; }
+.detail-page .footer-section li { font-size: 11px; }
 .detail-page .footer-bottom { margin-top: 0; }
 /* Legacy detail routes share the quieter typography and brand palette too. */
 .detail-hero { background: var(--forest-900); border-bottom: 1px solid var(--copper); }

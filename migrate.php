@@ -204,6 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $log[] = 'Seeded the existing New York/London/Beijing/Cape Town offices.';
         }
 
+        if ((int) $pdo->query("SELECT COUNT(*) FROM offices WHERE name = 'Kampala'")->fetchColumn() === 0) {
+            $maxOfficeSort = (int) $pdo->query('SELECT COALESCE(MAX(sort_order), 0) FROM offices')->fetchColumn();
+            $pdo->prepare('INSERT INTO offices (name, sort_order) VALUES (?, ?)')->execute(['Kampala', $maxOfficeSort + 10]);
+            $log[] = 'Added "Kampala" as an additional office location.';
+        }
+
         // --- Content: rename "Digital Infrastructure" sector, add "Aviation & Aerospace Advisory" ---
         $renamed = $pdo->prepare('UPDATE sectors SET slug = ?, name = ?, description = ? WHERE slug = ?');
         $renamed->execute([

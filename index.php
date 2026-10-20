@@ -39,7 +39,7 @@ $videos = fetch_all('SELECT * FROM videos WHERE is_active = 1 ORDER BY sort_orde
 $projects = fetch_all("SELECT * FROM projects WHERE status = 'published' ORDER BY sort_order, id");
 $insights = fetch_all("SELECT * FROM insights WHERE status = 'published' ORDER BY featured DESC, published_at DESC, id DESC LIMIT 6");
 try {
-    $offices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY sort_order, id');
+    $offices = fetch_all('SELECT name FROM offices WHERE is_active = 1 ORDER BY name');
 } catch (Throwable $exception) {
     $offices = [];
 }

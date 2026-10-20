@@ -204,7 +204,7 @@
 .adviser-profile { padding-top: 2.25rem; padding-bottom: 5rem; }
 .adviser-profile > .editorial-back { margin-bottom: 2.25rem; }
 .adviser-layout { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 5.5vw, 5rem); align-items: start; }
-.adviser-visual { position: sticky; top: 2rem; min-width: 0; }
+.adviser-visual { position: sticky; top: 2rem; min-width: 0; max-width: 320px; }
 .adviser-portrait { margin: 0; background: var(--sand); overflow: hidden; border-bottom-right-radius: 64px; }
 .adviser-portrait img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; }
 .adviser-caption { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.75rem 0; border-bottom: 1px solid var(--line); }
@@ -233,7 +233,7 @@
 @media (max-width: 640px) {
   .adviser-profile { padding-top: 1.75rem; padding-bottom: 3rem; }
   .adviser-layout { grid-template-columns: 1fr; gap: 2.5rem; }
-  .adviser-visual { position: static; }
+  .adviser-visual { position: static; max-width: none; }
   .adviser-portrait { border-bottom-right-radius: 44px; }
   .adviser-portrait img { aspect-ratio: 1 / 1; }
   .adviser-caption { flex-direction: row; align-items: center; }
